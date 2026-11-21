@@ -291,14 +291,14 @@
       ctx.strokeStyle = pal[e.axis] || pal.ink;
       if (e.axis === "w") ctx.setLineDash([4, 3]);
       if (!pal.forced) {
-        ctx.globalAlpha = isFront ? 1.0 : 0.56;
+        ctx.globalAlpha = isFront ? 1.0 : 0.68;
       }
       if (activePlane === e.axis) {
-        ctx.lineWidth = isFront ? 2.7 : 1.9;
+        ctx.lineWidth = isFront ? 2.7 : 2.0;
       } else {
         ctx.lineWidth = isFront
           ? (e.axis === "w" ? 1.65 : 2.15)
-          : (e.axis === "w" ? 1.15 : 1.35);
+          : (e.axis === "w" ? 1.25 : 1.5);
       }
     }
 
@@ -308,12 +308,12 @@
 
   function drawVertex(p, pal) {
     ctx.save();
-    if (!pal.forced && p.z3 < 0) ctx.globalAlpha = 0.62;
+    if (!pal.forced) ctx.globalAlpha = p.z3 >= 0 ? 0.72 : 0.42;
     ctx.beginPath();
-    ctx.arc(p.x, p.y, p.z3 >= 0 ? 2.9 : 2.0, 0, Math.PI * 2);
+    ctx.arc(p.x, p.y, p.z3 >= 0 ? 1.85 : 1.25, 0, Math.PI * 2);
     ctx.fillStyle = p.z3 >= 0 ? pal.ink : pal.bg;
     ctx.fill();
-    ctx.lineWidth = 1.15;
+    ctx.lineWidth = 0.9;
     ctx.strokeStyle = pal.ink;
     ctx.stroke();
     ctx.restore();
