@@ -90,10 +90,10 @@
     --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
     /* Fluid Scales (max <= 2.5 * min for WCAG 1.4.4 zoom) */
-    --text-hero: clamp(1.9rem, 1.2rem + 2.25vw, 3.2rem);
+    --text-hero: clamp(1.85rem, 1.15rem + 2.05vw, 2.95rem);
     --text-h2: clamp(1.7rem, 1.25rem + 1.6vw, 2.85rem);
     --text-h3: clamp(1.2rem, 1.05rem + 0.45vw, 1.48rem);
-    --text-lead: clamp(1rem, 0.96rem + 0.2vw, 1.12rem);
+    --text-lead: clamp(0.98rem, 0.94rem + 0.18vw, 1.08rem);
 
     /* Measure & Spacing */
     --container-max: 80rem;
@@ -541,13 +541,13 @@
 
   /* ======================== HERO COVER PLATE ======================== */
   .hero {
-    padding-block: clamp(1.65rem, 2.8vw, 2.75rem) clamp(2.15rem, 3.5vw, 3.25rem);
+    padding-block: clamp(1.15rem, 2.2dvh, 2rem) clamp(1.3rem, 2.5dvh, 2.15rem);
   }
 
   .hero-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: 2.25rem;
+    gap: 2rem;
     align-items: start;
   }
 
@@ -577,12 +577,12 @@
     align-items: center;
     gap: 0.6rem;
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: 0.74rem;
     font-weight: 500;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--signal);
-    margin-block-end: 0.95rem;
+    margin-block-end: 0.7rem;
   }
 
   .kicker::before {
@@ -595,7 +595,7 @@
 
   .hero-title {
     font-size: var(--text-hero);
-    line-height: 1.08;
+    line-height: 1.07;
     color: var(--ink);
   }
 
@@ -606,7 +606,7 @@
   }
 
   .hero-sub {
-    margin-block-start: 1.15rem;
+    margin-block-start: 0.9rem;
     font-size: var(--text-lead);
     color: var(--ink-muted);
     max-inline-size: 56ch;
@@ -618,8 +618,8 @@
   }
 
   .distinction-note {
-    margin-block-start: 1.2rem;
-    padding: 0.95rem 1.2rem;
+    margin-block-start: 0.95rem;
+    padding: 0.8rem 1.1rem;
     background-color: var(--paper-bright);
     border: 1px solid var(--rule);
     border-inline-start: 4px solid var(--ink);
@@ -634,16 +634,16 @@
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--signal);
-    margin-block-end: 0.25rem;
+    margin-block-end: 0.2rem;
   }
 
   .distinction-note p {
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     color: var(--ink);
   }
 
   .hero-cta {
-    margin-block-start: 1.45rem;
+    margin-block-start: 1.15rem;
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
@@ -696,7 +696,7 @@
 
   .instrument__stage {
     position: relative;
-    padding: 0.85rem;
+    padding: 0.65rem;
     background-image:
       linear-gradient(to right, var(--rule-subtle) 1px, transparent 1px),
       linear-gradient(to bottom, var(--rule-subtle) 1px, transparent 1px);
@@ -706,7 +706,7 @@
 
   .instrument__canvas-frame {
     position: relative;
-    inline-size: min(100%, 20.5rem);
+    inline-size: min(100%, 17.25rem);
     aspect-ratio: 1 / 1;
     margin-inline: auto;
     cursor: grab;
@@ -850,7 +850,7 @@
   }
 
   .ledger-cell {
-    padding: clamp(1.1rem, 2.5vw, 1.65rem) clamp(0.9rem, 2.2vw, 1.5rem);
+    padding: clamp(0.9rem, 1.6dvh, 1.15rem) clamp(0.9rem, 2vw, 1.35rem);
     border-block-end: 1px solid var(--rule);
   }
 
@@ -887,18 +887,18 @@
 
   .ledger-cell__val {
     font-family: var(--font-mono);
-    font-size: clamp(1.65rem, 1.35rem + 0.9vw, 2.15rem);
+    font-size: clamp(1.45rem, 1.2rem + 0.75vw, 1.9rem);
     font-weight: 600;
     font-variant-numeric: tabular-nums;
     letter-spacing: -0.03em;
     color: var(--ink);
-    margin-block: 0.45rem 0.35rem;
+    margin-block: 0.28rem 0.22rem;
   }
 
   .ledger-cell__note {
-    font-size: 0.85rem;
+    font-size: 0.81rem;
     color: var(--ink-muted);
-    line-height: 1.45;
+    line-height: 1.4;
   }
 
   /* ======================== PLATE 01: FOUR MOMENTS OF TRUST ======================== */
