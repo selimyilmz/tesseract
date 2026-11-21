@@ -1,0 +1,63 @@
+name: Deploy tesseract site to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - "scripts/check_contrast.py"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Verify site artifacts, JS syntax, anchors, and WCAG contrast
+        run: |
+          test -f site/index.html
+          test -f site/styles.css
+          test -f site/tesseract-plate.js
+          node --check site/tesseract-plate.js
+          python3 scripts/check_contrast.py site/styles.css
+          python3 -c '
+          import re, pathlib
+          html = pathlib.Path("site/index.html").read_text(encoding="utf-8")
+          assert "style=" not in html, "Inline style found (CSP violation)"
+          ids = set(re.findall(r"id=\"([^\"]+)\"", html))
+          hrefs = re.findall(r"href=\"#([^\"]+)\"", html)
+          missing = [h for h in hrefs if h and h not in ids]
+          assert not missing, f"Broken anchors: {missing}"
+          print(f"Verified {len(hrefs)} internal anchors.")
+          '
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
