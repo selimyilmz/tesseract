@@ -287,19 +287,22 @@
       ctx.strokeStyle = pal.muted;
       ctx.lineWidth = isFront ? 1.1 : 0.95;
       ctx.setLineDash([3, 3]);
+    } else if (activePlane === "all") {
+      ctx.strokeStyle = pal.ink;
+      if (e.axis === "w") ctx.setLineDash([4, 3]);
+      if (!pal.forced) {
+        ctx.globalAlpha = isFront ? 1.0 : 0.68;
+      }
+      ctx.lineWidth = isFront
+        ? (e.axis === "w" ? 1.55 : 2.15)
+        : (e.axis === "w" ? 1.2 : 1.5);
     } else {
       ctx.strokeStyle = pal[e.axis] || pal.ink;
       if (e.axis === "w") ctx.setLineDash([4, 3]);
       if (!pal.forced) {
         ctx.globalAlpha = isFront ? 1.0 : 0.68;
       }
-      if (activePlane === e.axis) {
-        ctx.lineWidth = isFront ? 2.7 : 2.0;
-      } else {
-        ctx.lineWidth = isFront
-          ? (e.axis === "w" ? 1.65 : 2.15)
-          : (e.axis === "w" ? 1.25 : 1.5);
-      }
+      ctx.lineWidth = isFront ? 2.7 : 2.0;
     }
 
     ctx.stroke();
@@ -308,12 +311,12 @@
 
   function drawVertex(p, pal) {
     ctx.save();
-    if (!pal.forced) ctx.globalAlpha = p.z3 >= 0 ? 0.72 : 0.42;
+    if (!pal.forced) ctx.globalAlpha = p.z3 >= 0 ? 0.62 : 0.35;
     ctx.beginPath();
-    ctx.arc(p.x, p.y, p.z3 >= 0 ? 1.85 : 1.25, 0, Math.PI * 2);
+    ctx.arc(p.x, p.y, p.z3 >= 0 ? 1.35 : 0.95, 0, Math.PI * 2);
     ctx.fillStyle = p.z3 >= 0 ? pal.ink : pal.bg;
     ctx.fill();
-    ctx.lineWidth = 0.9;
+    ctx.lineWidth = 0.75;
     ctx.strokeStyle = pal.ink;
     ctx.stroke();
     ctx.restore();
