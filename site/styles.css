@@ -106,7 +106,7 @@
 @layer reset {
   html {
     box-sizing: border-box;
-    scroll-padding-top: 5.5rem;
+    scroll-padding-top: 4.1rem;
   }
 
   @media (prefers-reduced-motion: no-preference) {
