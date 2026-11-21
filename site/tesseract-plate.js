@@ -209,13 +209,17 @@
 
   function rotate3D(pt) {
     const [x, y, z] = pt;
+    const cXY = Math.cos(angleXY), sXY = Math.sin(angleXY);
+    const x0 = x * cXY - y * sXY;
+    const y0 = x * sXY + y * cXY;
+
     const cY = Math.cos(rotY), sY = Math.sin(rotY);
-    const x1 = x * cY + z * sY;
-    const z1 = -x * sY + z * cY;
+    const x1 = x0 * cY + z * sY;
+    const z1 = -x0 * sY + z * cY;
 
     const cX = Math.cos(rotX), sX = Math.sin(rotX);
-    const y2 = y * cX - z1 * sX;
-    const z2 = y * sX + z1 * cX;
+    const y2 = y0 * cX - z1 * sX;
+    const z2 = y0 * sX + z1 * cX;
 
     return [x1, y2, z2];
   }
@@ -230,11 +234,7 @@
     const y2 = y * cYW - w1 * sYW;
     const w2 = y * sYW + w1 * cYW;
 
-    const cXY = Math.cos(angleXY), sXY = Math.sin(angleXY);
-    const x3 = x1 * cXY - y2 * sXY;
-    const y3 = x1 * sXY + y2 * cXY;
-
-    const [vx, vy, vz] = rotate3D([x3, y3, z]);
+    const [vx, vy, vz] = rotate3D([x1, y2, z]);
     return [vx, vy, vz, w2];
   }
 
@@ -449,11 +449,11 @@
     lastTimestamp = timestamp;
 
     if (!isDragging) {
-      /* Delta-time normalized rad/s (consistent across 60Hz/120Hz/144Hz displays) */
-      angleXW += 0.25 * dt;
-      angleYW += 0.16 * dt;
-      angleXY += 0.07 * dt;
-      rotY += 0.06 * dt;
+      /* Delta-time normalized rad/s: outer 4D cage & inner 3D core turn in lockstep */
+      angleXW += 0.24 * dt;
+      angleYW += 0.15 * dt;
+      angleXY += 0.14 * dt;
+      rotY += 0.18 * dt;
     }
     renderFrame();
     rafId = requestAnimationFrame(tick);
@@ -476,9 +476,12 @@
 
   frame.addEventListener("pointermove", (e) => {
     if (!isDragging) return;
-    angleXW += (e.clientX - lastX) * 0.011;
-    angleYW += (e.clientY - lastY) * 0.011;
-    rotY += (e.clientX - lastX) * 0.005;
+    const dx = e.clientX - lastX;
+    const dy = e.clientY - lastY;
+    rotY += dx * 0.011;
+    rotX += dy * 0.011;
+    angleXW += dx * 0.007;
+    angleYW += dy * 0.007;
     lastX = e.clientX;
     lastY = e.clientY;
     if (!isPlaying) renderFrame();
@@ -494,15 +497,17 @@
   frame.addEventListener("keydown", (e) => {
     const step = 0.14;
     if (e.key === "ArrowLeft") {
-      angleXW -= step;
-      rotY -= step * 0.4;
+      rotY -= step;
+      angleXW -= step * 0.6;
     } else if (e.key === "ArrowRight") {
-      angleXW += step;
-      rotY += step * 0.4;
+      rotY += step;
+      angleXW += step * 0.6;
     } else if (e.key === "ArrowUp") {
-      angleYW -= step;
+      rotX -= step;
+      angleYW -= step * 0.6;
     } else if (e.key === "ArrowDown") {
-      angleYW += step;
+      rotX += step;
+      angleYW += step * 0.6;
     } else {
       return;
     }
