@@ -1,4 +1,4 @@
-/* Living 4D Logo Containment Plate & UI Controls */
+/* Precision 4D Perspective Containment Plate (01-III Logo Edition) & UI Controls */
 (function () {
   "use strict";
 
@@ -105,7 +105,7 @@
     });
   }
 
-  /* ---- Living 01-III 4D Hypercube Logo Plate ---- */
+  /* ---- 4D Perspective Hypercube CAD Plate (with 01-III Logo Core Seal) ---- */
   const canvas = document.getElementById("tesseractCanvas");
   const frame = document.getElementById("tesseractFrame");
   const readoutTitle = document.getElementById("planeTitle");
@@ -118,7 +118,6 @@
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
-  /* 16 vertices of 4D hypercube (0..7: inner w=-1, 8..15: outer w=+1) */
   const vertices4D = [];
   for (let i = 0; i < 16; i++) {
     vertices4D.push([
@@ -126,26 +125,6 @@
       i & 2 ? 1 : -1,
       i & 4 ? 1 : -1,
       i & 8 ? 1 : -1,
-    ]);
-  }
-
-  /* 6 faces of a 3D cube (vertex indices 0..7) for subtle 01-III facet depth */
-  const CUBE_FACES = [
-    [0, 1, 3, 2],
-    [4, 5, 7, 6],
-    [0, 1, 5, 4],
-    [2, 3, 7, 6],
-    [0, 2, 6, 4],
-    [1, 3, 7, 5],
-  ];
-
-  /* 8 vertices of the central sealed vermilion core cube */
-  const coreVertices3D = [];
-  for (let i = 0; i < 8; i++) {
-    coreVertices3D.push([
-      i & 1 ? 0.25 : -0.25,
-      i & 2 ? 0.25 : -0.25,
-      i & 4 ? 0.25 : -0.25,
     ]);
   }
 
@@ -162,20 +141,19 @@
         }
       }
       if (diffCount === 1) {
-        const isOuter = i >= 8 && j >= 8;
-        const isInner = i < 8 && j < 8;
-        edges.push({ i, j, axis: AXIS_NAMES[diffAxis], isOuter, isInner });
+        edges.push({ i, j, axis: AXIS_NAMES[diffAxis] });
       }
     }
   }
 
-  /* Start in the exact isometric Schlegel pose of the 01-III logo */
+  /* Isometric 3D base matching our 01-III hexagonal logo symmetry */
   const ISO_Y = Math.PI / 4;
   const ISO_X = Math.atan(1 / Math.SQRT2);
 
   let activePlane = "all";
   let angleXW = 0.0;
   let angleYW = 0.0;
+  let angleXY = 0.0;
   let rotY = ISO_Y;
   let rotX = ISO_X;
   let isDragging = false;
@@ -195,7 +173,7 @@
     motionBtn.textContent = isPlaying ? "Pause" : "Play";
     motionBtn.setAttribute(
       "aria-label",
-      isPlaying ? "Pause 4D logo rotation" : "Play 4D logo rotation"
+      isPlaying ? "Pause 4D projection rotation" : "Play 4D projection rotation"
     );
   }
 
@@ -209,9 +187,8 @@
     renderFrame();
   }
 
-  function rotate4DTo3D(pt) {
+  function rotate4D(pt) {
     const [x, y, z, w] = pt;
-    /* 4D rotations (XW and YW) */
     const cXW = Math.cos(angleXW), sXW = Math.sin(angleXW);
     const x1 = x * cXW - w * sXW;
     const w1 = x * sXW + w * cXW;
@@ -220,23 +197,20 @@
     const y2 = y * cYW - w1 * sYW;
     const w2 = y * sYW + w1 * cYW;
 
-    /* Schlegel 4D -> 3D projection: w=+1 outer cube, w=-1 nested inner cube */
-    const dist4D = 2.65;
-    const wf = 1.65 / (dist4D - w2);
-    return rotate3D([x1 * wf, y2 * wf, z * wf], w2);
-  }
+    const cXY = Math.cos(angleXY), sXY = Math.sin(angleXY);
+    const x3 = x1 * cXY - y2 * sXY;
+    const y3 = x1 * sXY + y2 * cXY;
 
-  function rotate3D(pt, wDepth) {
-    const [x, y, z] = pt;
+    /* Isometric 3D view rotation so t=0 matches the exact 01-III logo silhouette */
     const cY = Math.cos(rotY), sY = Math.sin(rotY);
-    const x1 = x * cY + z * sY;
-    const z1 = -x * sY + z * cY;
+    const vx = x3 * cY + z * sY;
+    const vz1 = -x3 * sY + z * cY;
 
     const cX = Math.cos(rotX), sX = Math.sin(rotX);
-    const y2 = y * cX - z1 * sX;
-    const z2 = y * sX + z1 * cX;
+    const vy = y3 * cX - vz1 * sX;
+    const vz = y3 * sX + vz1 * cX;
 
-    return [x1, y2, z2, wDepth];
+    return [vx, vy, vz, w2];
   }
 
   function getPalette() {
@@ -249,13 +223,8 @@
         grid: fg,
         ink: fg,
         bg: bg,
-        outerFacet: "transparent",
-        innerFacet: bg,
-        strut: fg,
         muted: fg,
-        coreHi: "Highlight",
-        coreMid: "Highlight",
-        coreLo: "Highlight",
+        seal: "Highlight",
         x: fg,
         y: fg,
         z: "Highlight",
@@ -264,16 +233,11 @@
     }
     return {
       forced: false,
-      grid: "rgba(27, 21, 17, 0.13)",
+      grid: "rgba(27, 21, 17, 0.14)",
       ink: "#1B1511",
       bg: "#FAF8F3",
-      outerFacet: "rgba(27, 21, 17, 0.045)",
-      innerFacet: "rgba(250, 248, 243, 0.72)",
-      strut: "rgba(27, 21, 17, 0.58)",
-      muted: "rgba(27, 21, 17, 0.24)",
-      coreHi: "#D6472C",
-      coreMid: "#B02B16",
-      coreLo: "#7E1D0E",
+      muted: "rgba(27, 21, 17, 0.30)",
+      seal: "#B02B16",
       x: "#2E231C",
       y: "#1B563B",
       z: "#B02B16",
@@ -281,42 +245,40 @@
     };
   }
 
-  function strokeForEdge(edge, pal) {
-    if (activePlane === "all") {
-      if (edge.axis === "w") {
-        return { color: pal.strut, width: 1.3, dash: [] };
-      }
-      return {
-        color: pal.ink,
-        width: edge.isOuter ? 2.1 : 1.55,
-        dash: [],
-      };
+  function strokeForAxis(axis, pal) {
+    if (activePlane !== "all" && axis !== activePlane) {
+      return { color: pal.muted, width: 1.05, dash: [3, 3] };
     }
-    if (edge.axis !== activePlane) {
-      return { color: pal.muted, width: 1.0, dash: [3, 3] };
-    }
-    switch (edge.axis) {
+    switch (axis) {
       case "x":
-        return { color: pal.x, width: 2.6, dash: [] };
+        return { color: pal.x, width: activePlane === "x" ? 2.6 : 1.75, dash: [] };
       case "y":
-        return { color: pal.y, width: 2.6, dash: [] };
+        return { color: pal.y, width: activePlane === "y" ? 2.6 : 1.65, dash: [] };
       case "z":
-        return { color: pal.z, width: 2.6, dash: [] };
+        return { color: pal.z, width: activePlane === "z" ? 2.6 : 1.65, dash: [] };
       case "w":
       default:
-        return { color: pal.w, width: 2.4, dash: [5, 3] };
+        return { color: pal.w, width: activePlane === "w" ? 2.5 : 1.45, dash: [4, 3] };
     }
   }
 
-  function projectPoint(p3, cx, cy, scale) {
-    const dist3D = 6.2;
-    const zf = dist3D / (dist3D - p3[2]);
-    return {
-      x: cx + p3[0] * zf * scale,
-      y: cy - p3[1] * zf * scale,
-      z: p3[2],
-      w: p3[3],
-    };
+  function drawHexSeal(cx, cy, radius, pal) {
+    ctx.save();
+    ctx.beginPath();
+    for (let k = 0; k < 6; k++) {
+      const ang = (-Math.PI / 2) + (k * Math.PI) / 3;
+      const px = cx + radius * Math.cos(ang);
+      const py = cy + radius * Math.sin(ang);
+      if (k === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fillStyle = pal.seal;
+    ctx.fill();
+    ctx.lineWidth = 2.2;
+    ctx.strokeStyle = pal.bg;
+    ctx.stroke();
+    ctx.restore();
   }
 
   function renderFrame() {
@@ -345,64 +307,32 @@
     ctx.stroke();
     ctx.restore();
 
-    const scale = size * 0.245;
+    const dist4D = 2.75;
+    const dist3D = 3.6;
+    const scale = size * 1.12;
 
-    const projected = vertices4D.map((v) => projectPoint(rotate4DTo3D(v), cx, cy, scale));
+    const projected = vertices4D.map((v) => {
+      const [rx, ry, rz, rw] = rotate4D(v);
+      const wf = 1 / (dist4D - rw);
+      const x3 = rx * wf;
+      const y3 = ry * wf;
+      const z3 = rz * wf;
+      const zf = 1 / (dist3D - z3);
+      return {
+        x: cx + x3 * zf * scale,
+        y: cy - y3 * zf * scale,
+        depth: rw + z3,
+      };
+    });
 
-    /* 1. Subtle 01-III architectural facets on outer cube (indices 8..15) */
-    if (!pal.forced && activePlane === "all") {
-      const outerFaces = CUBE_FACES.map((face) => {
-        const pts = face.map((idx) => projected[idx + 8]);
-        const avgZ = pts.reduce((sum, p) => sum + p.z, 0) / 4;
-        return { pts, avgZ };
-      }).sort((a, b) => a.avgZ - b.avgZ);
-
-      outerFaces.forEach((f, idx) => {
-        if (idx < 3) return; /* front-facing 3 facets only for clean 01-III shading */
-        ctx.beginPath();
-        ctx.moveTo(f.pts[0].x, f.pts[0].y);
-        for (let k = 1; k < 4; k++) ctx.lineTo(f.pts[k].x, f.pts[k].y);
-        ctx.closePath();
-        ctx.fillStyle = idx === 5 ? "rgba(250, 248, 243, 0.22)" : idx === 4 ? "rgba(27, 21, 17, 0.045)" : "rgba(27, 21, 17, 0.085)";
-        ctx.fill();
-      });
-    }
-
-    /* 2. Translucent paper facets on inner containment cube (indices 0..7) */
-    if (!pal.forced && activePlane === "all") {
-      const innerFaces = CUBE_FACES.map((face) => {
-        const pts = face.map((idx) => projected[idx]);
-        const avgZ = pts.reduce((sum, p) => sum + p.z, 0) / 4;
-        return { pts, avgZ };
-      }).sort((a, b) => a.avgZ - b.avgZ);
-
-      innerFaces.forEach((f, idx) => {
-        if (idx < 3) return;
-        ctx.beginPath();
-        ctx.moveTo(f.pts[0].x, f.pts[0].y);
-        for (let k = 1; k < 4; k++) ctx.lineTo(f.pts[k].x, f.pts[k].y);
-        ctx.closePath();
-        ctx.fillStyle = pal.innerFacet;
-        ctx.fill();
-      });
-    }
-
-    /* 3. Draw all 32 hypercube edges sorted back-to-front */
-    const sortedEdges = edges
-      .map((edge) => ({
-        edge,
-        p1: projected[edge.i],
-        p2: projected[edge.j],
-        depth: (projected[edge.i].z + projected[edge.j].z) / 2,
-      }))
-      .sort((a, b) => a.depth - b.depth);
-
-    sortedEdges.forEach(({ edge, p1, p2 }) => {
-      const style = strokeForEdge(edge, pal);
+    /* Clean color-coded CAD edges */
+    edges.forEach(({ i, j, axis }) => {
+      const p1 = projected[i];
+      const p2 = projected[j];
+      const style = strokeForAxis(axis, pal);
       ctx.save();
       ctx.beginPath();
       ctx.setLineDash(style.dash);
-      ctx.lineJoin = "miter";
       ctx.moveTo(p1.x, p1.y);
       ctx.lineTo(p2.x, p2.y);
       ctx.strokeStyle = style.color;
@@ -411,27 +341,25 @@
       ctx.restore();
     });
 
-    /* 4. Signature 01-III sealed vermilion core cube at dead center */
-    const coreProj = coreVertices3D.map((v) => projectPoint(rotate3D(v, 0), cx, cy, scale));
-    const coreFaces = CUBE_FACES.map((face) => {
-      const pts = face.map((idx) => coreProj[idx]);
-      const avgZ = pts.reduce((sum, p) => sum + p.z, 0) / 4;
-      return { pts, avgZ };
-    }).sort((a, b) => a.avgZ - b.avgZ);
-
-    coreFaces.slice(3).forEach((f, idx) => {
+    /* Crisp architectural vertex nodes */
+    projected.forEach((p) => {
+      const r = p.depth > 0 ? 3.1 : 2.1;
       ctx.beginPath();
-      ctx.moveTo(f.pts[0].x, f.pts[0].y);
-      for (let k = 1; k < 4; k++) ctx.lineTo(f.pts[k].x, f.pts[k].y);
-      ctx.closePath();
-      ctx.fillStyle = idx === 2 ? pal.coreHi : idx === 1 ? pal.coreMid : pal.coreLo;
+      ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+      ctx.fillStyle = p.depth > 0 ? pal.ink : pal.bg;
       ctx.fill();
+      ctx.lineWidth = 1.2;
+      ctx.strokeStyle = pal.ink;
+      ctx.stroke();
     });
+
+    /* Crisp flat 01-III hexagonal vermilion seal anchored cleanly at center crosshair */
+    drawHexSeal(cx, cy, Math.max(5.5, size * 0.028), pal);
 
     if (telemetryEl) {
       const norm = (a) => (((a % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2)).toFixed(2);
       telemetryEl.textContent =
-        "XW " + norm(angleXW) + " rad  ·  YW " + norm(angleYW) + " rad  ·  3D " + norm(rotY) + " rad";
+        "XW " + norm(angleXW) + " rad  ·  YW " + norm(angleYW) + " rad  ·  XY " + norm(angleXY) + " rad";
     }
   }
 
@@ -455,10 +383,10 @@
     lastTimestamp = timestamp;
 
     if (!isDragging) {
-      /* Calm, dignified 4D breathing rotation around the 01-III logo silhouette */
-      angleXW += 0.24 * dt;
-      angleYW += 0.14 * dt;
-      rotY += 0.08 * dt;
+      /* Delta-time normalized rad/s (consistent across 60Hz/120Hz/144Hz displays) */
+      angleXW += 0.28 * dt;
+      angleYW += 0.19 * dt;
+      angleXY += 0.09 * dt;
     }
     renderFrame();
     rafId = requestAnimationFrame(tick);
@@ -481,9 +409,8 @@
 
   frame.addEventListener("pointermove", (e) => {
     if (!isDragging) return;
-    rotY += (e.clientX - lastX) * 0.011;
-    rotX += (e.clientY - lastY) * 0.011;
-    angleXW += (e.clientX - lastX) * 0.004;
+    angleXW += (e.clientX - lastX) * 0.011;
+    angleYW += (e.clientY - lastY) * 0.011;
     lastX = e.clientX;
     lastY = e.clientY;
     if (!isPlaying) renderFrame();
@@ -499,13 +426,13 @@
   frame.addEventListener("keydown", (e) => {
     const step = 0.14;
     if (e.key === "ArrowLeft") {
-      rotY -= step;
+      angleXW -= step;
     } else if (e.key === "ArrowRight") {
-      rotY += step;
+      angleXW += step;
     } else if (e.key === "ArrowUp") {
-      rotX -= step;
+      angleYW -= step;
     } else if (e.key === "ArrowDown") {
-      rotX += step;
+      angleYW += step;
     } else {
       return;
     }
