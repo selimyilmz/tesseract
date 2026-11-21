@@ -90,10 +90,10 @@
     --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
     /* Fluid Scales (max <= 2.5 * min for WCAG 1.4.4 zoom) */
-    --text-hero: clamp(1.85rem, 1.15rem + 2.05vw, 2.95rem);
+    --text-hero: clamp(1.9rem, 1.2rem + 2.2vw, 3.1rem);
     --text-h2: clamp(1.7rem, 1.25rem + 1.6vw, 2.85rem);
     --text-h3: clamp(1.2rem, 1.05rem + 0.45vw, 1.48rem);
-    --text-lead: clamp(0.98rem, 0.94rem + 0.18vw, 1.08rem);
+    --text-lead: clamp(1rem, 0.96rem + 0.2vw, 1.1rem);
 
     /* Measure & Spacing */
     --container-max: 80rem;
@@ -540,8 +540,29 @@
   }
 
   /* ======================== HERO COVER PLATE ======================== */
+  .cover-fold {
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (min-width: 64rem) {
+    .cover-fold {
+      min-block-size: calc(100dvh - 4.15rem);
+    }
+
+    .cover-fold > .hero {
+      flex: 1 0 auto;
+      display: flex;
+      align-items: center;
+    }
+
+    .cover-fold > .ledger {
+      margin-block-start: auto;
+    }
+  }
+
   .hero {
-    padding-block: clamp(1.15rem, 2.2dvh, 2rem) clamp(1.3rem, 2.5dvh, 2.15rem);
+    padding-block: clamp(1.5rem, 2.6dvh, 2.5rem);
   }
 
   .hero-grid {
@@ -706,7 +727,7 @@
 
   .instrument__canvas-frame {
     position: relative;
-    inline-size: min(100%, 17.25rem);
+    inline-size: min(100%, 19rem);
     aspect-ratio: 1 / 1;
     margin-inline: auto;
     cursor: grab;
@@ -850,7 +871,7 @@
   }
 
   .ledger-cell {
-    padding: clamp(0.9rem, 1.6dvh, 1.15rem) clamp(0.9rem, 2vw, 1.35rem);
+    padding: clamp(1.05rem, 1.9dvh, 1.35rem) clamp(0.9rem, 2vw, 1.45rem);
     border-block-end: 1px solid var(--rule);
   }
 
