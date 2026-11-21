@@ -48,15 +48,15 @@
   :root {
     color-scheme: light;
 
-    /* Tier 1–2: Archival Paper & Carbon Ink Palette */
+    /* Tier 1–2: Archival Paper & Warm Espresso Ink Palette */
     --paper: #F3EFE6;
     --paper-alt: #EAE4D7;
     --paper-bright: #FAF8F3;
-    --ink: #121311;
-    --ink-muted: #484640;
-    --ink-faint: #5D5A52;
-    --rule: #C6BFB0;
-    --rule-subtle: #DBD5C8;
+    --ink: #1B1511;
+    --ink-muted: #4C433B;
+    --ink-faint: #61554B;
+    --rule: #C8C0B0;
+    --rule-subtle: #DBD4C6;
 
     /* Semantic Signal Accents (light ground) */
     --signal: #B02B16;
@@ -66,17 +66,17 @@
     --amber-ink: #7A4206;
     --amber-tint: #F5ECDC;
 
-    /* Selective Obsidian Specimen Surfaces */
-    --obsidian: #141513;
-    --obsidian-surface: #1D1F1C;
-    --obsidian-ink: #EFEBE2;
-    --obsidian-muted: #ADA99E;
-    --obsidian-rule: #353832;
-    --obsidian-signal: #F26D52;
-    --obsidian-moss: #5ED39B;
-    --obsidian-amber: #EAB354;
+    /* Unified Deep Espresso Specimen Surfaces (Plate 03) */
+    --obsidian: #231B15;
+    --obsidian-surface: #2E231C;
+    --obsidian-ink: #F5EFE6;
+    --obsidian-muted: #D2C6B7;
+    --obsidian-rule: #4E3E33;
+    --obsidian-signal: #F39678;
+    --obsidian-moss: #84D9AE;
+    --obsidian-amber: #F0BE66;
 
-    /* Warm Deep Espresso Surface (Commercial Enterprise Dossier) */
+    /* Warm Deep Espresso Surface (Plate 05 & Solid Controls) */
     --espresso: #2E231C;
     --espresso-ink: #F5EFE6;
     --espresso-muted: #D5C9B9;
@@ -436,13 +436,15 @@
   }
 
   .btn--solid {
-    background-color: var(--ink);
-    color: var(--paper-bright);
+    background-color: var(--espresso);
+    border-color: var(--espresso);
+    color: var(--espresso-ink);
   }
 
   .btn--solid:hover:not(:disabled) {
     background-color: var(--signal);
     border-color: var(--signal);
+    color: var(--paper-bright);
   }
 
   .btn--outline {
@@ -451,8 +453,9 @@
   }
 
   .btn--outline:hover:not(:disabled) {
-    background-color: var(--ink);
-    color: var(--paper-bright);
+    background-color: var(--espresso);
+    border-color: var(--espresso);
+    color: var(--espresso-ink);
   }
 
   .btn--compact {
@@ -788,8 +791,8 @@
   }
 
   .plane-btn[aria-pressed="true"] {
-    background-color: var(--ink);
-    color: var(--paper-bright);
+    background-color: var(--espresso);
+    color: var(--espresso-ink);
     font-weight: 600;
   }
 
@@ -827,8 +830,9 @@
   }
 
   .motion-btn:hover {
-    background-color: var(--ink);
-    color: var(--paper-bright);
+    background-color: var(--espresso);
+    border-color: var(--espresso);
+    color: var(--espresso-ink);
   }
 
   /* ======================== SPECIFICATION LEDGER (METRICS) ======================== */
