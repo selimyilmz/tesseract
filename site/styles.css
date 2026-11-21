@@ -300,29 +300,7 @@
     transform: translateY(0);
   }
 
-  /* Masthead & Top Technical Index Bar */
-  .doc-strip {
-    background-color: var(--ink);
-    color: var(--obsidian-ink);
-    font-family: var(--font-mono);
-    font-size: 0.69rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding-block: 0.38rem;
-  }
-
-  .doc-strip__inner {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.4rem 1.5rem;
-  }
-
-  .doc-strip__tag {
-    color: var(--obsidian-muted);
-  }
-
+  /* Masthead */
   .masthead {
     position: sticky;
     inset-block-start: 0;
@@ -1773,15 +1751,6 @@
 
   /* ======================== MOBILE OPTIMIZATIONS (320px–608px) ======================== */
   @media (max-width: 40rem) {
-    .doc-strip__tag {
-      display: none;
-    }
-
-    .doc-strip {
-      padding-block: 0.34rem;
-      font-size: 0.66rem;
-    }
-
     .plate {
       padding-block: clamp(2.5rem, 6vw, 3.5rem);
     }
@@ -1944,7 +1913,6 @@
       background-image: none;
     }
 
-    .doc-strip,
     .mobile-drawer,
     .menu-toggle,
     .instrument__controls,
