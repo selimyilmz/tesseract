@@ -1,4 +1,4 @@
-/* Precision 4D Perspective Containment Plate (01-III Logo Edition) & UI Controls */
+/* Precision 4D Perspective Containment Plate (01-III True-Depth Edition) & UI Controls */
 (function () {
   "use strict";
 
@@ -105,7 +105,7 @@
     });
   }
 
-  /* ---- 4D Perspective Hypercube CAD Plate (with 01-III Logo Core Seal) ---- */
+  /* ---- 4D Hypercube CAD Plate with True Z-Depth & Backface-Culled 01-III Core ---- */
   const canvas = document.getElementById("tesseractCanvas");
   const frame = document.getElementById("tesseractFrame");
   const readoutTitle = document.getElementById("planeTitle");
@@ -118,6 +118,7 @@
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
+  /* 16 vertices of the 4D hypercube */
   const vertices4D = [];
   for (let i = 0; i < 16; i++) {
     vertices4D.push([
@@ -146,7 +147,26 @@
     }
   }
 
-  /* Isometric 3D base matching our 01-III hexagonal logo symmetry */
+  /* Sealed 3D vermilion core at origin (exact outward normals for flicker-free backface culling) */
+  const CORE_R = 0.088;
+  const coreVerts3D = [];
+  for (let i = 0; i < 8; i++) {
+    coreVerts3D.push([
+      i & 1 ? CORE_R : -CORE_R,
+      i & 2 ? CORE_R : -CORE_R,
+      i & 4 ? CORE_R : -CORE_R,
+    ]);
+  }
+  const CORE_FACES = [
+    { idx: [4, 5, 7, 6], n: [0, 0, 1] },
+    { idx: [0, 2, 3, 1], n: [0, 0, -1] },
+    { idx: [2, 6, 7, 3], n: [0, 1, 0] },
+    { idx: [0, 1, 5, 4], n: [0, -1, 0] },
+    { idx: [1, 3, 7, 5], n: [1, 0, 0] },
+    { idx: [0, 4, 6, 2], n: [-1, 0, 0] },
+  ];
+
+  /* Exact isometric base mirroring our 01-III hexagonal logo */
   const ISO_Y = Math.PI / 4;
   const ISO_X = Math.atan(1 / Math.SQRT2);
 
@@ -187,6 +207,19 @@
     renderFrame();
   }
 
+  function rotate3D(pt) {
+    const [x, y, z] = pt;
+    const cY = Math.cos(rotY), sY = Math.sin(rotY);
+    const x1 = x * cY + z * sY;
+    const z1 = -x * sY + z * cY;
+
+    const cX = Math.cos(rotX), sX = Math.sin(rotX);
+    const y2 = y * cX - z1 * sX;
+    const z2 = y * sX + z1 * cX;
+
+    return [x1, y2, z2];
+  }
+
   function rotate4D(pt) {
     const [x, y, z, w] = pt;
     const cXW = Math.cos(angleXW), sXW = Math.sin(angleXW);
@@ -201,15 +234,7 @@
     const x3 = x1 * cXY - y2 * sXY;
     const y3 = x1 * sXY + y2 * cXY;
 
-    /* Isometric 3D view rotation so t=0 matches the exact 01-III logo silhouette */
-    const cY = Math.cos(rotY), sY = Math.sin(rotY);
-    const vx = x3 * cY + z * sY;
-    const vz1 = -x3 * sY + z * cY;
-
-    const cX = Math.cos(rotX), sX = Math.sin(rotX);
-    const vy = y3 * cX - vz1 * sX;
-    const vz = y3 * sX + vz1 * cX;
-
+    const [vx, vy, vz] = rotate3D([x3, y3, z]);
     return [vx, vy, vz, w2];
   }
 
@@ -224,7 +249,10 @@
         ink: fg,
         bg: bg,
         muted: fg,
-        seal: "Highlight",
+        coreHi: "Highlight",
+        coreMid: "Highlight",
+        coreLo: "Highlight",
+        coreEdge: fg,
         x: fg,
         y: fg,
         z: "Highlight",
@@ -236,8 +264,11 @@
       grid: "rgba(27, 21, 17, 0.14)",
       ink: "#1B1511",
       bg: "#FAF8F3",
-      muted: "rgba(27, 21, 17, 0.30)",
-      seal: "#B02B16",
+      muted: "rgba(27, 21, 17, 0.28)",
+      coreHi: "#D94C32",
+      coreMid: "#B02B16",
+      coreLo: "#7D1C0E",
+      coreEdge: "#7D1C0E",
       x: "#2E231C",
       y: "#1B563B",
       z: "#B02B16",
@@ -245,40 +276,77 @@
     };
   }
 
-  function strokeForAxis(axis, pal) {
-    if (activePlane !== "all" && axis !== activePlane) {
-      return { color: pal.muted, width: 1.05, dash: [3, 3] };
-    }
-    switch (axis) {
-      case "x":
-        return { color: pal.x, width: activePlane === "x" ? 2.6 : 1.75, dash: [] };
-      case "y":
-        return { color: pal.y, width: activePlane === "y" ? 2.6 : 1.65, dash: [] };
-      case "z":
-        return { color: pal.z, width: activePlane === "z" ? 2.6 : 1.65, dash: [] };
-      case "w":
-      default:
-        return { color: pal.w, width: activePlane === "w" ? 2.5 : 1.45, dash: [4, 3] };
-    }
-  }
-
-  function drawHexSeal(cx, cy, radius, pal) {
+  function drawEdge(e, p1, p2, pal, isFront) {
+    const isolated = activePlane !== "all" && e.axis !== activePlane;
     ctx.save();
     ctx.beginPath();
-    for (let k = 0; k < 6; k++) {
-      const ang = (-Math.PI / 2) + (k * Math.PI) / 3;
-      const px = cx + radius * Math.cos(ang);
-      const py = cy + radius * Math.sin(ang);
-      if (k === 0) ctx.moveTo(px, py);
-      else ctx.lineTo(px, py);
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+
+    if (isolated) {
+      ctx.strokeStyle = pal.muted;
+      ctx.lineWidth = isFront ? 1.1 : 0.95;
+      ctx.setLineDash([3, 3]);
+    } else {
+      ctx.strokeStyle = pal[e.axis] || pal.ink;
+      if (e.axis === "w") ctx.setLineDash([4, 3]);
+      if (!pal.forced) {
+        ctx.globalAlpha = isFront ? 1.0 : 0.56;
+      }
+      if (activePlane === e.axis) {
+        ctx.lineWidth = isFront ? 2.7 : 1.9;
+      } else {
+        ctx.lineWidth = isFront
+          ? (e.axis === "w" ? 1.65 : 2.15)
+          : (e.axis === "w" ? 1.15 : 1.35);
+      }
     }
-    ctx.closePath();
-    ctx.fillStyle = pal.seal;
-    ctx.fill();
-    ctx.lineWidth = 2.2;
-    ctx.strokeStyle = pal.bg;
+
     ctx.stroke();
     ctx.restore();
+  }
+
+  function drawVertex(p, pal) {
+    ctx.save();
+    if (!pal.forced && p.z3 < 0) ctx.globalAlpha = 0.62;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.z3 >= 0 ? 2.9 : 2.0, 0, Math.PI * 2);
+    ctx.fillStyle = p.z3 >= 0 ? pal.ink : pal.bg;
+    ctx.fill();
+    ctx.lineWidth = 1.15;
+    ctx.strokeStyle = pal.ink;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function draw3DCore(cx, cy, scale, pal) {
+    const dist3D = 3.55;
+    const pts = coreVerts3D.map((v) => {
+      const [x, y, z] = rotate3D(v);
+      const zf = 1 / (dist3D - z);
+      return { x: cx + x * zf * scale, y: cy - y * zf * scale, z };
+    });
+
+    /* Directional key light from top-left-front for crisp 3-tone architectural shading */
+    const lx = -0.45, ly = 0.72, lz = 0.52;
+    CORE_FACES.forEach((f) => {
+      const [nx, ny, nz] = rotate3D(f.n);
+      if (nz <= 0) return; /* exact backface culling */
+      const lit = nx * lx + ny * ly + nz * lz;
+      const fill = lit > 0.45 ? pal.coreHi : lit > 0.05 ? pal.coreMid : pal.coreLo;
+
+      ctx.beginPath();
+      f.idx.forEach((vi, k) => {
+        if (k === 0) ctx.moveTo(pts[vi].x, pts[vi].y);
+        else ctx.lineTo(pts[vi].x, pts[vi].y);
+      });
+      ctx.closePath();
+      ctx.fillStyle = fill;
+      ctx.fill();
+      ctx.strokeStyle = pal.coreEdge;
+      ctx.lineWidth = 0.65;
+      ctx.stroke();
+    });
   }
 
   function renderFrame() {
@@ -308,8 +376,8 @@
     ctx.restore();
 
     const dist4D = 2.75;
-    const dist3D = 3.6;
-    const scale = size * 1.12;
+    const dist3D = 3.55;
+    const scale = size * 1.14;
 
     const projected = vertices4D.map((v) => {
       const [rx, ry, rz, rw] = rotate4D(v);
@@ -321,40 +389,35 @@
       return {
         x: cx + x3 * zf * scale,
         y: cy - y3 * zf * scale,
-        depth: rw + z3,
+        z3: z3,
       };
     });
 
-    /* Clean color-coded CAD edges */
-    edges.forEach(({ i, j, axis }) => {
-      const p1 = projected[i];
-      const p2 = projected[j];
-      const style = strokeForAxis(axis, pal);
-      ctx.save();
-      ctx.beginPath();
-      ctx.setLineDash(style.dash);
-      ctx.moveTo(p1.x, p1.y);
-      ctx.lineTo(p2.x, p2.y);
-      ctx.strokeStyle = style.color;
-      ctx.lineWidth = style.width;
-      ctx.stroke();
-      ctx.restore();
+    /* Split edges cleanly by Z-depth relative to the center core (z3 = 0) */
+    const backEdges = [];
+    const frontEdges = [];
+    edges.forEach((e) => {
+      const avgZ = (projected[e.i].z3 + projected[e.j].z3) / 2;
+      if (avgZ < 0) backEdges.push({ e, avgZ });
+      else frontEdges.push({ e, avgZ });
     });
+    backEdges.sort((a, b) => a.avgZ - b.avgZ);
+    frontEdges.sort((a, b) => a.avgZ - b.avgZ);
 
-    /* Crisp architectural vertex nodes */
+    /* PASS 1: Back edges & back vertices (BEHIND the center core) */
+    backEdges.forEach(({ e }) => drawEdge(e, projected[e.i], projected[e.j], pal, false));
     projected.forEach((p) => {
-      const r = p.depth > 0 ? 3.1 : 2.1;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-      ctx.fillStyle = p.depth > 0 ? pal.ink : pal.bg;
-      ctx.fill();
-      ctx.lineWidth = 1.2;
-      ctx.strokeStyle = pal.ink;
-      ctx.stroke();
+      if (p.z3 < 0) drawVertex(p, pal);
     });
 
-    /* Crisp flat 01-III hexagonal vermilion seal anchored cleanly at center crosshair */
-    drawHexSeal(cx, cy, Math.max(5.5, size * 0.028), pal);
+    /* PASS 2: Sealed 3D vermilion 01-III core at z = 0 */
+    draw3DCore(cx, cy, scale, pal);
+
+    /* PASS 3: Front edges & front vertices (CLEANLY IN FRONT OF the center core) */
+    frontEdges.forEach(({ e }) => drawEdge(e, projected[e.i], projected[e.j], pal, true));
+    projected.forEach((p) => {
+      if (p.z3 >= 0) drawVertex(p, pal);
+    });
 
     if (telemetryEl) {
       const norm = (a) => (((a % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2)).toFixed(2);
@@ -384,9 +447,10 @@
 
     if (!isDragging) {
       /* Delta-time normalized rad/s (consistent across 60Hz/120Hz/144Hz displays) */
-      angleXW += 0.28 * dt;
-      angleYW += 0.19 * dt;
-      angleXY += 0.09 * dt;
+      angleXW += 0.25 * dt;
+      angleYW += 0.16 * dt;
+      angleXY += 0.07 * dt;
+      rotY += 0.06 * dt;
     }
     renderFrame();
     rafId = requestAnimationFrame(tick);
@@ -411,6 +475,7 @@
     if (!isDragging) return;
     angleXW += (e.clientX - lastX) * 0.011;
     angleYW += (e.clientY - lastY) * 0.011;
+    rotY += (e.clientX - lastX) * 0.005;
     lastX = e.clientX;
     lastY = e.clientY;
     if (!isPlaying) renderFrame();
@@ -427,8 +492,10 @@
     const step = 0.14;
     if (e.key === "ArrowLeft") {
       angleXW -= step;
+      rotY -= step * 0.4;
     } else if (e.key === "ArrowRight") {
       angleXW += step;
+      rotY += step * 0.4;
     } else if (e.key === "ArrowUp") {
       angleYW -= step;
     } else if (e.key === "ArrowDown") {
