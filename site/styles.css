@@ -465,22 +465,12 @@
     white-space: nowrap;
   }
 
-  .nav-github {
-    display: none;
-  }
-
   .nav-pitch {
     display: none;
   }
 
   @media (min-width: 44rem) {
     .nav-pitch {
-      display: inline-flex;
-    }
-  }
-
-  @media (min-width: 52rem) {
-    .nav-github {
       display: inline-flex;
     }
   }

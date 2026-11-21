@@ -86,8 +86,7 @@
         "tesseract Walkthrough Request — Organization: " +
         firm +
         " | Contact: " +
-        email +
-        " | Portal: https://github.com/selimyilmz/tesseract";
+        email;
 
       let copied = false;
       if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -100,7 +99,7 @@
       }
 
       statusEl.textContent = copied
-        ? "Brief summary copied to clipboard. Open a walkthrough request via the GitHub link to schedule a live negative-test session."
+        ? "Brief summary copied to clipboard. Share it with the tesseract team to schedule a live negative-test session."
         : "Brief prepared: " + briefText;
       form.reset();
     });
