@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; base-uri 'none'; form-action 'none';">
   <title>tesseract — Zero-Trust Kernel Containment for Autonomous AI Agents</title>
-  <meta name="description" content="tesseract is a Docker-independent Linux kernel containment cage and fail-closed behavioral evidence engine for AI agents and skills. Docker verifies where code came from; tesseract verifies and enforces what it does.">
+  <meta name="description" content="tesseract is a daemonless Linux kernel containment cage and fail-closed behavioral evidence engine for AI agents and skills. Registries verify where code came from; tesseract verifies and enforces what it does.">
   <meta name="theme-color" content="#F3EFE6">
 
   <!-- OpenGraph & Social Sharing -->
@@ -14,11 +14,11 @@
   <meta property="og:title" content="tesseract — Zero-Trust Kernel Containment for Autonomous AI Agents">
   <meta property="og:url" content="https://selimyilmz.github.io/tesseract/">
   <meta property="og:image" content="https://selimyilmz.github.io/tesseract/assets/tesseract-logo-paper-1024.png">
-  <meta property="og:description" content="Docker verifies where code came from; tesseract observes what AI agents and skills actually try to do inside a Linux kernel cage and enforces explicit, version-bound permissions.">
+  <meta property="og:description" content="Container registries verify where code came from; tesseract observes what AI agents and skills actually try to do inside a Linux kernel cage and enforces explicit, version-bound permissions.">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:image" content="https://selimyilmz.github.io/tesseract/assets/tesseract-logo-paper-1024.png">
   <meta name="twitter:title" content="tesseract — Zero-Trust Kernel Containment for Autonomous AI Agents">
-  <meta name="twitter:description" content="Docker-independent Linux kernel cage, decoy lures, zero-egress sinkhole, and fail-closed SHA-256 behavioral evidence for AI agents.">
+  <meta name="twitter:description" content="Daemonless Linux kernel cage, decoy lures, zero-egress sinkhole, and fail-closed SHA-256 behavioral evidence for AI agents.">
 
   <!-- Editorial & Industrial Typography: Newsreader + IBM Plex Sans + IBM Plex Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -113,13 +113,13 @@
 
           <p class="hero-sub">
             When an autonomous agent runs a third-party skill or tool, that code inherits broad host access.
-            <strong>tesseract</strong> builds a Docker-independent Linux kernel cage around execution, plants per-run decoy lures, mediates proxy-aware traffic through a zero-egress sinkhole, and seals fail-closed behavioral evidence.
+            <strong>tesseract</strong> builds a daemonless Linux kernel cage around execution, plants per-run decoy lures, mediates proxy-aware traffic through a zero-egress sinkhole, and seals fail-closed behavioral evidence.
           </p>
 
           <div class="distinction-note">
             <span class="distinction-note__label">The Core Distinction</span>
             <p>
-              Docker verifies where a package came from.
+              Container registries and static scanners verify where a package came from.
               <strong>tesseract observes what it actually tries to do and enforces explicit, version-bound permissions.</strong>
             </p>
           </div>
@@ -330,7 +330,7 @@
           <div>
             <h2 class="plate-title">Why We Call It Tesseract: The 4D Containment Lattice</h2>
             <p class="plate-intro">
-              In geometry, a tesseract is a 4-dimensional hypercube. In our architecture, containment spans four orthogonal enforcement and observation planes simultaneously — built without Docker or managed sandboxes.
+              In geometry, a tesseract is a 4-dimensional hypercube. In our architecture, containment spans four orthogonal enforcement and observation planes simultaneously — engineered directly on native Linux kernel primitives with no container daemon.
             </p>
           </div>
         </div>
@@ -618,7 +618,7 @@
               </p>
               <ul class="gateway-list">
                 <li>Free standalone local CLI &amp; report verifier</li>
-                <li>Docker-independent bubblewrap + seccomp cage</li>
+                <li>Daemonless bubblewrap + seccomp kernel cage</li>
                 <li>Per-run decoy lures across file, output &amp; network channels</li>
                 <li>Opt-in attested skill registry (roadmap)</li>
               </ul>
@@ -706,7 +706,7 @@
   <!-- ======================== COLOPHON ======================== -->
   <footer class="colophon">
     <div class="container colophon__inner">
-      <div>tesseract &copy; 2026. Docker-Independent Kernel Containment.</div>
+      <div>tesseract &copy; 2026. Zero-Trust Kernel Containment.</div>
       <div class="colophon__links">
         <a href="#how-it-works">How It Works</a>
         <a href="#four-dimensions">The 4D Cage</a>
