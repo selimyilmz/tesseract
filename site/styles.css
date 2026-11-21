@@ -865,7 +865,7 @@
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 
-  @media (min-width: 38rem) {
+  @media (min-width: 22.5rem) {
     .ledger-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -878,7 +878,7 @@
   }
 
   .ledger-cell {
-    padding: 1.65rem 1.5rem;
+    padding: clamp(1.1rem, 2.5vw, 1.65rem) clamp(0.9rem, 2.2vw, 1.5rem);
     border-block-end: 1px solid var(--rule);
   }
 
@@ -886,7 +886,7 @@
     border-block-end: 0;
   }
 
-  @media (min-width: 38rem) {
+  @media (min-width: 22.5rem) {
     .ledger-cell:nth-child(odd) {
       border-inline-end: 1px solid var(--rule);
     }
@@ -1769,6 +1769,132 @@
   .colophon__pass {
     color: var(--moss);
     font-weight: 600;
+  }
+
+  /* ======================== MOBILE OPTIMIZATIONS (320px–608px) ======================== */
+  @media (max-width: 40rem) {
+    .doc-strip__tag {
+      display: none;
+    }
+
+    .doc-strip {
+      padding-block: 0.34rem;
+      font-size: 0.66rem;
+    }
+
+    .plate {
+      padding-block: clamp(2.5rem, 6vw, 3.5rem);
+    }
+
+    .plate-head {
+      gap: 0.9rem;
+      margin-block-end: 1.65rem;
+    }
+
+    .step-col,
+    .plane-cell,
+    .attest-col,
+    .gateway-col {
+      padding: 1.35rem 1.15rem;
+    }
+
+    .trace-pane__head,
+    .trace-pane__foot {
+      padding: 0.85rem 1.05rem;
+    }
+
+    .trace-log {
+      padding: 1.05rem;
+      font-size: 0.75rem;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .cmd-strip {
+      padding: 0.65rem 0.8rem;
+      font-size: 0.72rem;
+      line-height: 1.48;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .dispatch-form {
+      padding: 1.25rem 1.1rem 1.4rem;
+    }
+
+    .colophon {
+      padding-block: 1.5rem;
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .hero {
+      padding-block: 1.35rem 1.85rem;
+    }
+
+    .hero-cta {
+      flex-direction: column;
+    }
+
+    .hero-cta .btn {
+      inline-size: 100%;
+    }
+
+    .instrument__bar {
+      padding: 0.55rem 0.75rem;
+      font-size: 0.67rem;
+    }
+
+    .instrument__stage {
+      padding: 0.6rem;
+    }
+
+    .instrument__corner {
+      font-size: 0.64rem;
+    }
+
+    .instrument__telemetry {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.69rem;
+      justify-content: center;
+    }
+
+    .instrument__telemetry span:last-child {
+      display: none;
+    }
+
+    .plane-btn {
+      font-size: 0.68rem;
+      padding: 0.4rem 0.1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .instrument__legend {
+      padding: 0.75rem;
+      gap: 0.65rem;
+    }
+
+    .instrument__readout {
+      font-size: 0.73rem;
+    }
+
+    .ledger-cell__val {
+      font-size: clamp(1.25rem, 1.05rem + 1.2vw, 1.65rem);
+    }
+
+    .ledger-cell__note {
+      font-size: 0.78rem;
+    }
+  }
+
+  @media (max-width: 22.5rem) {
+    .instrument__legend {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .motion-btn {
+      inline-size: 100%;
+    }
   }
 }
 

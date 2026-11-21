@@ -83,11 +83,11 @@
       if (!form.reportValidity()) return;
 
       const briefText =
-        "tesseract (agent-sandbox-guard) Walkthrough Request — Organization: " +
+        "tesseract Walkthrough Request — Organization: " +
         firm +
         " | Contact: " +
         email +
-        " | Repo: https://github.com/selimyilmz/tesseract";
+        " | Portal: https://github.com/selimyilmz/tesseract";
 
       let copied = false;
       if (navigator.clipboard && navigator.clipboard.writeText) {
