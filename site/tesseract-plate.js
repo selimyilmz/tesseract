@@ -1,49 +1,52 @@
-/* Precision 4D Perspective Containment Plate (01-III True-Depth Edition) & UI Controls */
+/* Mobile navigation and the interactive 4D projection. */
 (function () {
   "use strict";
 
   const PLANE_META = {
     all: {
-      title: "ALL PLANES ACTIVE (X · Y · Z · W)",
-      detail: "Four orthogonal containment boundaries enforced around the sealed core.",
+      title: "Test environment",
+      detail: "Select a part to highlight it. Drag or use the arrow keys to rotate.",
     },
     x: {
-      title: "PLANE X — PINNED WOLFI ROOTFS",
-      detail: "Host filesystem never mounted; read-only Wolfi rootfs + bounded tmpfs + fanotify.",
+      title: "Filesystem",
+      detail: "A read-only Wolfi filesystem and a separate file sensor.",
     },
     y: {
-      title: "PLANE Y — SECCOMP BPF (DEFAULT EPERM)",
-      detail: "Sealed memfd BPF profile verified by SHA-256; forbidden syscalls denied.",
+      title: "Kernel calls",
+      detail: "Seccomp restricts which kernel calls the workload can make.",
     },
     z: {
-      title: "PLANE Z — HTTP/HTTPS & IMDS SINKHOLE",
-      detail: "Proxy-aware egress trapped with 0 upstream forwarding; direct sockets ENETUNREACH.",
+      title: "Network",
+      detail: "The test proxy captures supported requests without forwarding them upstream.",
     },
     w: {
-      title: "PLANE W — HASH-CHAINED EVIDENCE",
-      detail: "Root-owned SHA-256 event chain with fail-closed completeness latches.",
+      title: "Evidence log",
+      detail: "A separate reader checks the event chain and reports gaps in observation.",
     },
   };
 
-  /* ---- Mobile Navigation Drawer (Auto-Closes on Desktop Resize) ---- */
   const menuBtn = document.getElementById("menuToggle");
   const drawer = document.getElementById("mobileDrawer");
-  const desktopQuery = window.matchMedia("(min-width: 64rem)");
+  const desktopQuery = window.matchMedia("(min-width: 54rem)");
 
   if (menuBtn && drawer) {
     const closeMenu = () => {
       drawer.hidden = true;
       menuBtn.setAttribute("aria-expanded", "false");
-      menuBtn.textContent = "Index";
+      menuBtn.textContent = "Menu";
     };
     menuBtn.addEventListener("click", () => {
       const opening = drawer.hidden;
       drawer.hidden = !opening;
       menuBtn.setAttribute("aria-expanded", String(opening));
-      menuBtn.textContent = opening ? "Close" : "Index";
+      menuBtn.textContent = opening ? "Close" : "Menu";
     });
     drawer.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", closeMenu);
+      link.addEventListener("click", () => {
+        closeMenu();
+        const heading = document.querySelector(link.hash + " h2");
+        heading?.focus({ preventScroll: true });
+      });
     });
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && !drawer.hidden) {
@@ -56,67 +59,21 @@
     });
   }
 
-  /* ---- Accessible Static Walkthrough Brief Generator ---- */
-  const form = document.getElementById("inquiryForm");
-  const statusEl = document.getElementById("inquiryStatus");
-  if (form && statusEl) {
-    const emailInput = form.elements.partner_email;
-    const firmInput = form.elements.investment_firm;
-
-    [emailInput, firmInput].forEach((field) => {
-      if (!field) return;
-      field.addEventListener("input", () => {
-        field.setCustomValidity("");
-      });
-    });
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      statusEl.textContent = "";
-
-      const email = emailInput ? emailInput.value.trim() : "";
-      const firm = firmInput ? firmInput.value.trim() : "";
-
-      if (firmInput && !firm) {
-        firmInput.setCustomValidity("Please enter a firm or organization name.");
-      }
-      if (!form.reportValidity()) return;
-
-      const briefText =
-        "tesseract Walkthrough Request — Organization: " +
-        firm +
-        " | Contact: " +
-        email;
-
-      let copied = false;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        try {
-          await navigator.clipboard.writeText(briefText);
-          copied = true;
-        } catch (_err) {
-          copied = false;
-        }
-      }
-
-      statusEl.textContent = copied
-        ? "Brief summary copied to clipboard. Share it with the tesseract team to schedule a live negative-test session."
-        : "Brief prepared: " + briefText;
-      form.reset();
-    });
-  }
-
-  /* ---- 4D Hypercube CAD Plate with True Z-Depth & Backface-Culled 01-III Core ---- */
   const canvas = document.getElementById("tesseractCanvas");
   const frame = document.getElementById("tesseractFrame");
+  const controls = document.getElementById("instrumentControls");
+  const fallback = document.querySelector(".instrument__fallback");
   const readoutTitle = document.getElementById("planeTitle");
   const readoutDetail = document.getElementById("planeDetail");
-  const telemetryEl = document.getElementById("angleTelemetry");
   const motionBtn = document.getElementById("motionToggle");
   const planeButtons = document.querySelectorAll(".plane-btn[data-plane]");
 
   if (!canvas || !frame) return;
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
+  frame.hidden = false;
+  controls.hidden = false;
+  fallback.hidden = true;
 
   /* 16 vertices of the 4D hypercube */
   const vertices4D = [];
@@ -179,14 +136,14 @@
   let isDragging = false;
   let lastX = 0;
   let lastY = 0;
-  let currentSize = 320;
+  let currentSize = 256;
   let rafId = null;
   let lastTimestamp = null;
   let isInViewport = true;
 
   const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   const forcedColorsQuery = window.matchMedia("(forced-colors: active)");
-  let isPlaying = !reducedMotionQuery.matches;
+  let isPlaying = false;
 
   function syncMotionButton() {
     if (!motionBtn) return;
@@ -200,7 +157,7 @@
   function resizeCanvas() {
     const rect = frame.getBoundingClientRect();
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    currentSize = Math.max(180, Math.round(rect.width || 320));
+    currentSize = Math.max(1, Math.round(rect.width));
     canvas.width = Math.round(currentSize * dpr);
     canvas.height = Math.round(currentSize * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -421,12 +378,6 @@
     projected.forEach((p) => {
       if (p.z3 >= 0) drawVertex(p, pal);
     });
-
-    if (telemetryEl) {
-      const norm = (a) => (((a % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2)).toFixed(2);
-      telemetryEl.textContent =
-        "XW " + norm(angleXW) + " rad  ·  YW " + norm(angleYW) + " rad  ·  XY " + norm(angleXY) + " rad";
-    }
   }
 
   function stopLoop() {
@@ -558,13 +509,10 @@
   }
 
   reducedMotionQuery.addEventListener("change", (e) => {
-    isPlaying = !e.matches;
+    if (!e.matches) return;
+    isPlaying = false;
     syncMotionButton();
-    if (isPlaying) {
-      startLoop();
-    } else {
-      stopLoop();
-    }
+    stopLoop();
   });
 
   forcedColorsQuery.addEventListener("change", renderFrame);
@@ -581,5 +529,4 @@
 
   syncMotionButton();
   resizeCanvas();
-  startLoop();
 })();
