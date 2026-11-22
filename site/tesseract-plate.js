@@ -143,7 +143,7 @@
 
   const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   const forcedColorsQuery = window.matchMedia("(forced-colors: active)");
-  let isPlaying = false;
+  let isPlaying = !reducedMotionQuery.matches;
 
   function syncMotionButton() {
     if (!motionBtn) return;
@@ -529,4 +529,5 @@
 
   syncMotionButton();
   resizeCanvas();
+  startLoop();
 })();
