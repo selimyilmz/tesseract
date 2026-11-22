@@ -52,7 +52,7 @@
   frame.hidden = false;
   controls.hidden = false;
   fallback.hidden = true;
-  planeIndicator.hidden = false;
+  if (planeIndicator) planeIndicator.hidden = false;
 
   /* 16 vertices of the 4D hypercube */
   const vertices4D = [];
@@ -451,8 +451,10 @@
     btn.addEventListener("click", () => {
       activePlane = btn.dataset.plane || "all";
       const indicatorLabel = activePlane === "all" ? "All axes" : `${activePlane.toUpperCase()} axis`;
-      planeIndicator.dataset.plane = activePlane;
-      planeIndicator.textContent = indicatorLabel;
+      if (planeIndicator) {
+        planeIndicator.dataset.plane = activePlane;
+        planeIndicator.textContent = indicatorLabel;
+      }
       planeButtons.forEach((b) => {
         b.setAttribute("aria-pressed", String(b === btn));
       });
