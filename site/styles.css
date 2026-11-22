@@ -2,7 +2,6 @@
  * contrast-pair: --ink / --paper 4.5
  * contrast-pair: --muted / --paper 4.5
  * contrast-pair: --rust / --paper 4.5
- * contrast-pair: --moss / --paper 4.5
  * contrast-pair: --ink / --paper-dark 4.5
  * contrast-pair: --muted / --paper-dark 4.5
  * contrast-pair: --ink / --workflow-paper 4.5
@@ -15,6 +14,10 @@
  * contrast-pair: --white / --rust 4.5
  * contrast-pair: --light-muted / --ink 4.5
  * contrast-pair: --amber / --ink 4.5
+ * contrast-pair: --axis-x / --white 4.5
+ * contrast-pair: --axis-y / --white 4.5
+ * contrast-pair: --axis-z / --white 4.5
+ * contrast-pair: --axis-w / --white 4.5
  */
 @layer tokens, base, layout, components, accessibility;
 
@@ -30,7 +33,10 @@
     --ink: #241C17;
     --muted: #5C4E43;
     --rust: #A33723;
-    --moss: #255B42;
+    --axis-x: #2E231C;
+    --axis-y: #1B563B;
+    --axis-z: #B02B16;
+    --axis-w: #7A4206;
     --rule: #C4B6A4;
     --light-muted: #DBCFC0;
     --amber: #F0BE82;
@@ -162,15 +168,16 @@
   .mobile-drawer { display: none; }
 
   .hero {
+    --hero-gap: clamp(2.5rem, 6.25vw, 5.5rem);
     display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-    gap: clamp(2rem, 5vw, 4.75rem);
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+    gap: var(--hero-gap);
     align-items: center;
     padding-block: clamp(2.75rem, 5vw, 5rem);
   }
 
   .hero h1 {
-    font-size: clamp(2.65rem, 1.72rem + 3.7vw, 4.75rem);
+    font-size: clamp(2.65rem, 1.46rem + 3.15vw, 4rem);
     line-height: 0.99;
   }
 
@@ -319,19 +326,40 @@
     background: var(--white);
   }
 
+  .architecture__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+    gap: clamp(1.75rem, 5vw, 5rem);
+  }
+
+  .architecture__intro h2 { max-width: 14ch; text-wrap: initial; }
+  .architecture__intro p { max-width: 33ch; margin-top: 0.9rem; color: var(--muted); }
+
   .architecture__notes { border-top: 1px solid var(--ink); }
   .architecture__notes > div {
     display: grid;
-    grid-template-columns: minmax(8rem, 0.55fr) minmax(0, 1.45fr);
+    grid-template-columns: minmax(9.5rem, 0.7fr) minmax(0, 1.3fr);
     gap: 0.3rem 1rem;
     border-bottom: 1px solid var(--rule);
     padding-block: 0.75rem;
   }
 
-  .architecture__notes dt { font-weight: 600; }
+  .architecture__notes dt { display: flex; align-items: baseline; gap: 0.65rem; font-weight: 600; }
+  .architecture__axis { color: var(--plane-accent); font: 500 0.86rem/1.5 var(--mono); }
   .architecture__notes dd { max-width: 65ch; color: var(--muted); }
 
-  .instrument { min-width: 0; background: var(--white); border: 1px solid var(--rule); border-top: 2px solid var(--ink); }
+  .instrument { position: relative; min-width: 0; background: var(--white); border: 1px solid var(--rule); border-top: 2px solid var(--ink); }
+
+  @media (min-width: 44rem) {
+    .hero .instrument::before {
+      content: "";
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: calc(var(--hero-gap) / -2);
+      border-inline-start: 1px solid var(--rule);
+      pointer-events: none;
+    }
+  }
 
   .instrument figcaption {
     display: flex;
@@ -339,13 +367,36 @@
     justify-content: space-between;
     gap: 0.25rem 0.75rem;
     align-items: baseline;
+    background: var(--paper);
     border-bottom: 1px solid var(--rule);
     padding: 0.65rem 0.9rem;
     font-size: 0.9rem;
     font-weight: 600;
   }
 
-  .instrument figcaption span:last-child { color: var(--muted); font: 0.78rem/1.5 var(--mono); }
+  .instrument__caption {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.65rem;
+    color: var(--muted);
+    font: 0.78rem/1.5 var(--mono);
+  }
+
+  .instrument__axis {
+    display: inline-flex;
+    min-inline-size: 9.75ch;
+    align-items: center;
+    gap: 0.35rem;
+    white-space: nowrap;
+  }
+
+  .instrument__axis::before {
+    content: "";
+    flex: 0 0 0.4rem;
+    aspect-ratio: 1;
+    background: var(--plane-accent, var(--ink));
+    transform: rotate(45deg);
+  }
 
   .instrument__stage {
     position: relative;
@@ -379,8 +430,32 @@
     border-width: 0 1px 1px 0;
   }
 
+  .instrument__scale {
+    position: absolute;
+    inset: 0.7rem;
+    pointer-events: none;
+  }
+
+  .instrument__scale::before,
+  .instrument__scale::after {
+    content: "";
+    position: absolute;
+  }
+
+  .instrument__scale::before {
+    inset: 0 0.45rem auto 1.25rem;
+    height: 0.28rem;
+    background: repeating-linear-gradient(to right, var(--rule) 0 1px, transparent 1px 0.75rem);
+  }
+
+  .instrument__scale::after {
+    inset: 1.25rem auto 0.45rem 0;
+    width: 0.28rem;
+    background: repeating-linear-gradient(to bottom, var(--rule) 0 1px, transparent 1px 0.75rem);
+  }
+
   .instrument__fallback { width: min(44%, 9rem); height: auto; }
-  .instrument__canvas-frame { width: min(100%, clamp(15rem, 25vw, 20rem)); aspect-ratio: 1; cursor: grab; touch-action: pan-y; }
+  .instrument__canvas-frame { width: min(100%, clamp(15rem, 28vw, 22rem)); aspect-ratio: 1; cursor: grab; touch-action: pan-y; }
   .instrument__canvas-frame:active { cursor: grabbing; }
   .instrument canvas { width: 100%; height: auto; }
   .instrument__layers { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid var(--rule); }
@@ -398,9 +473,10 @@
   .plane-btn { padding-inline: 0.25rem; overflow-wrap: anywhere; }
   .plane-btn + .plane-btn { border-left: 1px solid var(--rule); }
   .plane-btn:hover, .motion-btn:hover { background: var(--paper-dark); }
-  .plane-btn[data-plane="y"] { --plane-accent: var(--moss); }
-  .plane-btn[data-plane="z"] { --plane-accent: var(--rust); }
-  .plane-btn[data-plane="w"] { --plane-accent: #7A4206; }
+  [data-plane="x"] { --plane-accent: var(--axis-x); }
+  [data-plane="y"] { --plane-accent: var(--axis-y); }
+  [data-plane="z"] { --plane-accent: var(--axis-z); }
+  [data-plane="w"] { --plane-accent: var(--axis-w); }
   .plane-btn[aria-pressed="true"] {
     background: var(--paper-dark);
     box-shadow: inset 0 -3px var(--plane-accent, var(--ink));
@@ -460,7 +536,7 @@
   }
 
   @media (max-width: 43.99rem) {
-    .hero, .workflow > div, .architecture__notes > div,
+    .hero, .workflow > div, .architecture__grid, .architecture__notes > div,
     .status__inner, .use-case, .contact__inner { grid-template-columns: 1fr; }
     .hero { gap: 1.3rem; padding-block: 2.05rem 2.75rem; }
     .hero__intro { margin-top: 0.95rem; }

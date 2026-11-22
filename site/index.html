@@ -18,8 +18,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" referrerpolicy="no-referrer">
-  <link rel="stylesheet" href="styles.css?v=20261122h">
-  <script src="tesseract-plate.js?v=20261122g" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20261122i">
+  <script src="tesseract-plate.js?v=20261122i" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -61,8 +61,15 @@
       </div>
 
       <figure class="instrument">
-        <figcaption><span>The Tesseract</span> <span>4D projection</span></figcaption>
+        <figcaption>
+          <span>The Tesseract</span>
+          <span class="instrument__caption">
+            <span>4D projection</span>
+            <span id="planeIndicator" class="instrument__axis" data-plane="all" hidden>All axes</span>
+          </span>
+        </figcaption>
         <div class="instrument__stage">
+          <span class="instrument__scale" aria-hidden="true"></span>
           <img src="assets/tesseract-logo.svg" alt="Tesseract emblem" width="224" height="224" class="instrument__fallback">
           <div id="tesseractFrame" class="instrument__canvas-frame" tabindex="0" aria-label="4D projection. Drag or use the arrow keys to rotate." hidden>
             <canvas id="tesseractCanvas" role="img" aria-label="Hypercube projection illustrating four parts of the test environment."></canvas>
@@ -119,16 +126,28 @@
     </section>
 
     <section id="four-dimensions" class="architecture section" aria-labelledby="architecture-title">
-      <div class="container">
-        <div class="section-heading">
+      <div class="container architecture__grid">
+        <div class="architecture__intro">
           <h2 id="architecture-title" tabindex="-1">Inside the test environment</h2>
           <p>Each part has a different job, from limiting what the workload can reach to recording what the observers saw.</p>
         </div>
         <dl class="architecture__notes">
-          <div><dt>Filesystem</dt><dd>A pinned, read-only Wolfi filesystem gives the workload its own view of files. The file sensor runs outside the worker's user identity.</dd></div>
-          <div><dt>Process limits</dt><dd>Seccomp restricts kernel calls. Linux control groups limit CPU, memory, and the number of tasks.</dd></div>
-          <div><dt>Network</dt><dd>The test proxy captures supported HTTP and HTTPS requests in a simulated service with no upstream forwarding.</dd></div>
-          <div><dt>Evidence</dt><dd>A separate reader checks the hash-linked event log and reports gaps in observation.</dd></div>
+          <div>
+            <dt><span class="architecture__axis" data-plane="x" aria-label="X axis">X</span> Filesystem</dt>
+            <dd>A pinned, read-only Wolfi filesystem gives the workload its own view of files. The file sensor runs outside the worker's user identity.</dd>
+          </div>
+          <div>
+            <dt><span class="architecture__axis" data-plane="y" aria-label="Y axis">Y</span> Process limits</dt>
+            <dd>Seccomp restricts kernel calls. Linux control groups limit CPU, memory, and the number of tasks.</dd>
+          </div>
+          <div>
+            <dt><span class="architecture__axis" data-plane="z" aria-label="Z axis">Z</span> Network</dt>
+            <dd>The test proxy captures supported HTTP and HTTPS requests in a simulated service with no upstream forwarding.</dd>
+          </div>
+          <div>
+            <dt><span class="architecture__axis" data-plane="w" aria-label="W axis">W</span> Evidence</dt>
+            <dd>A separate reader checks the hash-linked event log and reports gaps in observation.</dd>
+          </div>
         </dl>
       </div>
     </section>

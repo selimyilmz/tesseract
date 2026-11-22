@@ -42,6 +42,7 @@
   const fallback = document.querySelector(".instrument__fallback");
   const readouts = document.querySelectorAll(".instrument__readout [data-readout]");
   const announcement = document.getElementById("planeAnnouncement");
+  const planeIndicator = document.getElementById("planeIndicator");
   const motionBtn = document.getElementById("motionToggle");
   const planeButtons = document.querySelectorAll(".plane-btn[data-plane]");
 
@@ -51,6 +52,7 @@
   frame.hidden = false;
   controls.hidden = false;
   fallback.hidden = true;
+  planeIndicator.hidden = false;
 
   /* 16 vertices of the 4D hypercube */
   const vertices4D = [];
@@ -64,6 +66,10 @@
   }
 
   const AXIS_NAMES = ["x", "y", "z", "w"];
+  const axisStyle = getComputedStyle(frame);
+  const axisColors = Object.fromEntries(
+    AXIS_NAMES.map((axis) => [axis, axisStyle.getPropertyValue(`--axis-${axis}`).trim()])
+  );
   const edges = [];
   for (let i = 0; i < 16; i++) {
     for (let j = i + 1; j < 16; j++) {
@@ -203,10 +209,7 @@
       coreMid: "#B02B16",
       coreLo: "#7D1C0E",
       coreEdge: "#7D1C0E",
-      x: "#2E231C",
-      y: "#1B563B",
-      z: "#B02B16",
-      w: "#7A4206",
+      ...axisColors,
     };
   }
 
@@ -447,13 +450,16 @@
   planeButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
       activePlane = btn.dataset.plane || "all";
+      const indicatorLabel = activePlane === "all" ? "All axes" : `${activePlane.toUpperCase()} axis`;
+      planeIndicator.dataset.plane = activePlane;
+      planeIndicator.textContent = indicatorLabel;
       planeButtons.forEach((b) => {
         b.setAttribute("aria-pressed", String(b === btn));
       });
       readouts.forEach((readout) => {
         const selected = readout.dataset.readout === activePlane;
         readout.toggleAttribute("data-current", selected);
-        if (selected) announcement.textContent = readout.textContent;
+        if (selected) announcement.textContent = `${indicatorLabel}. ${readout.textContent}`;
       });
       renderFrame();
     });
