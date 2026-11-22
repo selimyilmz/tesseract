@@ -2,29 +2,6 @@
 (function () {
   "use strict";
 
-  const PLANE_META = {
-    all: {
-      title: "Test environment",
-      detail: "Select a part to highlight it. Drag or use the arrow keys to rotate.",
-    },
-    x: {
-      title: "Filesystem",
-      detail: "A read-only Wolfi filesystem and a separate file sensor.",
-    },
-    y: {
-      title: "Kernel calls",
-      detail: "Seccomp restricts which kernel calls the workload can make.",
-    },
-    z: {
-      title: "Network",
-      detail: "The test proxy captures supported requests without forwarding them upstream.",
-    },
-    w: {
-      title: "Evidence log",
-      detail: "A separate reader checks the event chain and reports gaps in observation.",
-    },
-  };
-
   const menuBtn = document.getElementById("menuToggle");
   const drawer = document.getElementById("mobileDrawer");
   const desktopQuery = window.matchMedia("(min-width: 54rem)");
@@ -63,8 +40,8 @@
   const frame = document.getElementById("tesseractFrame");
   const controls = document.getElementById("instrumentControls");
   const fallback = document.querySelector(".instrument__fallback");
-  const readoutTitle = document.getElementById("planeTitle");
-  const readoutDetail = document.getElementById("planeDetail");
+  const readouts = document.querySelectorAll(".instrument__readout [data-readout]");
+  const announcement = document.getElementById("planeAnnouncement");
   const motionBtn = document.getElementById("motionToggle");
   const planeButtons = document.querySelectorAll(".plane-btn[data-plane]");
 
@@ -473,9 +450,11 @@
       planeButtons.forEach((b) => {
         b.setAttribute("aria-pressed", String(b === btn));
       });
-      const info = PLANE_META[activePlane] || PLANE_META.all;
-      if (readoutTitle) readoutTitle.textContent = info.title;
-      if (readoutDetail) readoutDetail.textContent = info.detail;
+      readouts.forEach((readout) => {
+        const selected = readout.dataset.readout === activePlane;
+        readout.toggleAttribute("data-current", selected);
+        if (selected) announcement.textContent = readout.textContent;
+      });
       renderFrame();
     });
   });

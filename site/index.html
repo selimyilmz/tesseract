@@ -18,8 +18,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" referrerpolicy="no-referrer">
-  <link rel="stylesheet" href="styles.css?v=20261122f">
-  <script src="tesseract-plate.js?v=20261122f" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20261122g">
+  <script src="tesseract-plate.js?v=20261122g" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -77,36 +77,45 @@
             <button type="button" class="plane-btn" data-plane="w" aria-pressed="false">Log</button>
           </div>
           <div class="instrument__legend">
-            <p aria-live="polite"><strong id="planeTitle">Test environment</strong><span id="planeDetail">Select a part to highlight it. Drag or use the arrow keys to rotate.</span></p>
+            <div class="instrument__readout">
+              <p data-readout="all" data-current><strong>Test environment</strong> <span>Select a part to highlight it. Drag or use the arrow keys to rotate.</span></p>
+              <p data-readout="x"><strong>Filesystem</strong> <span>A read-only Wolfi filesystem and a separate file sensor.</span></p>
+              <p data-readout="y"><strong>Kernel calls</strong> <span>Seccomp restricts which kernel calls the workload can make.</span></p>
+              <p data-readout="z"><strong>Network</strong> <span>The test proxy captures supported requests without forwarding them upstream.</span></p>
+              <p data-readout="w"><strong>Evidence log</strong> <span>A separate reader checks the event chain and reports gaps in observation.</span></p>
+            </div>
+            <p class="visually-hidden" id="planeAnnouncement" role="status"></p>
             <button type="button" id="motionToggle" class="motion-btn">Play</button>
           </div>
         </div>
       </figure>
     </section>
 
-    <section id="how-it-works" class="container section" aria-labelledby="workflow-title">
-      <div class="section-heading">
-        <h2 id="workflow-title" tabindex="-1">From testing to approval</h2>
-        <p>The report helps a reviewer decide whether and under which permissions a skill should enter an approved catalog.</p>
+    <section id="how-it-works" class="workflow-section section" aria-labelledby="workflow-title">
+      <div class="container">
+        <div class="section-heading">
+          <h2 id="workflow-title" tabindex="-1">From testing to approval</h2>
+          <p>The report helps a reviewer decide whether and under which permissions a skill should enter an approved catalog.</p>
+        </div>
+        <dl class="workflow">
+          <div>
+            <dt>Before installation <span class="stage stage--prototype">In prototype</span></dt>
+            <dd>Run a controlled workload with test data. Record file activity and supported network traffic, including gaps in coverage.</dd>
+          </div>
+          <div>
+            <dt>During execution <span class="stage stage--prototype">In prototype</span></dt>
+            <dd>Apply the test environment's Linux isolation, resource limits, and network restrictions while the workload runs.</dd>
+          </div>
+          <div>
+            <dt>When sharing <span class="stage">Planned</span></dt>
+            <dd>Share a specific package version with its approved permissions and test evidence attached.</dd>
+          </div>
+          <div>
+            <dt>After an update <span class="stage">Planned</span></dt>
+            <dd>Require a new test and approval when the package changes.</dd>
+          </div>
+        </dl>
       </div>
-      <dl class="workflow">
-        <div>
-          <dt>Before installation <span class="stage stage--prototype">In prototype</span></dt>
-          <dd>Run a controlled workload with test data. Record file activity and supported network traffic, including gaps in coverage.</dd>
-        </div>
-        <div>
-          <dt>During execution <span class="stage stage--prototype">In prototype</span></dt>
-          <dd>Apply the test environment's Linux isolation, resource limits, and network restrictions while the workload runs.</dd>
-        </div>
-        <div>
-          <dt>When sharing <span class="stage">Planned</span></dt>
-          <dd>Share a specific package version with its approved permissions and test evidence attached.</dd>
-        </div>
-        <div>
-          <dt>After an update <span class="stage">Planned</span></dt>
-          <dd>Require a new test and approval when the package changes.</dd>
-        </div>
-      </dl>
     </section>
 
     <section id="four-dimensions" class="architecture section" aria-labelledby="architecture-title">

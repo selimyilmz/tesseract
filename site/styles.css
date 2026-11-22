@@ -5,6 +5,9 @@
  * contrast-pair: --moss / --paper 4.5
  * contrast-pair: --ink / --paper-dark 4.5
  * contrast-pair: --muted / --paper-dark 4.5
+ * contrast-pair: --ink / --workflow-paper 4.5
+ * contrast-pair: --muted / --workflow-paper 4.5
+ * contrast-pair: --moss / --workflow-paper 4.5
  * contrast-pair: --ink / --white 4.5
  * contrast-pair: --muted / --white 4.5
  * contrast-pair: --rust / --white 4.5
@@ -21,6 +24,8 @@
     --paper: #F3EFE6;
     --paper-dark: #E8E1D3;
     --white: #FAF8F3;
+    --workflow-paper: #E1E8DE;
+    --workflow-rule: #AAB7A7;
     --ink: #241C17;
     --muted: #5C4E43;
     --rust: #A33723;
@@ -40,6 +45,10 @@
   *, *::before, *::after { box-sizing: border-box; }
 
   html { scroll-padding-top: 4.65rem; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
 
   body {
     margin: 0;
@@ -157,7 +166,6 @@
     gap: clamp(2rem, 5vw, 4.75rem);
     align-items: center;
     padding-block: clamp(2.75rem, 5vw, 5rem);
-    border-bottom: 1px solid var(--rule);
   }
 
   .hero h1 {
@@ -217,15 +225,49 @@
 
   .text-link:hover { color: var(--rust); }
 
-  .workflow { border-top: 1px solid var(--ink); }
+  .workflow-section {
+    background: var(--workflow-paper);
+    border-top: 1px solid var(--workflow-rule);
+  }
+
+  .workflow {
+    position: relative;
+    border-top: 1px solid var(--moss);
+  }
+
+  .workflow::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0.35rem;
+    border-inline-start: 1px solid var(--workflow-rule);
+  }
 
   .workflow > div {
+    position: relative;
     display: grid;
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
     gap: 0.35rem 2rem;
     align-items: center;
     padding-block: 1.1rem;
-    border-bottom: 1px solid var(--rule);
+    padding-inline-start: 1.65rem;
+    border-bottom: 1px solid var(--workflow-rule);
+  }
+
+  .workflow > div::before {
+    content: "";
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 0.015rem;
+    width: 0.7rem;
+    aspect-ratio: 1;
+    border: 1px solid var(--moss);
+    background: var(--workflow-paper);
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  .workflow > div:has(.stage--prototype)::before {
+    background: var(--moss);
   }
 
   .workflow dt {
@@ -305,6 +347,7 @@
   .instrument figcaption span:last-child { color: var(--muted); font: 0.78rem/1.5 var(--mono); }
 
   .instrument__stage {
+    position: relative;
     display: grid;
     place-items: center;
     min-height: 13rem;
@@ -313,6 +356,26 @@
       linear-gradient(to bottom, var(--paper-dark) 1px, transparent 1px);
     background-position: center;
     background-size: 1.5rem 1.5rem;
+  }
+
+  .instrument__stage::before,
+  .instrument__stage::after {
+    content: "";
+    position: absolute;
+    width: 0.9rem;
+    height: 0.9rem;
+    border: 0 solid var(--rust);
+    pointer-events: none;
+  }
+
+  .instrument__stage::before {
+    inset: 0.7rem auto auto 0.7rem;
+    border-width: 1px 0 0 1px;
+  }
+
+  .instrument__stage::after {
+    inset: auto 0.7rem 0.7rem auto;
+    border-width: 0 1px 1px 0;
   }
 
   .instrument__fallback { width: min(44%, 9rem); height: auto; }
@@ -331,20 +394,31 @@
     cursor: pointer;
   }
 
+  .plane-btn { padding-inline: 0.25rem; overflow-wrap: anywhere; }
   .plane-btn + .plane-btn { border-left: 1px solid var(--rule); }
   .plane-btn:hover, .motion-btn:hover { background: var(--paper-dark); }
-  .plane-btn[aria-pressed="true"] { background: var(--ink); color: var(--white); }
+  .plane-btn[data-plane="y"] { --plane-accent: var(--moss); }
+  .plane-btn[data-plane="z"] { --plane-accent: var(--rust); }
+  .plane-btn[data-plane="w"] { --plane-accent: #7A4206; }
+  .plane-btn[aria-pressed="true"] {
+    background: var(--paper-dark);
+    box-shadow: inset 0 -3px var(--plane-accent, var(--ink));
+  }
 
   .instrument__legend {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
-    justify-content: space-between;
     gap: 0.75rem;
     padding: 0.75rem 0.9rem;
     border-top: 1px solid var(--rule);
     font-size: 0.86rem;
   }
 
+  /* Keep the height of the tallest readout at the current text size and width. */
+  .instrument__readout { display: grid; }
+  .instrument__readout > p { grid-area: 1 / 1; visibility: hidden; }
+  .instrument__readout > [data-current] { visibility: visible; }
   .instrument__legend strong, .instrument__legend span { display: block; }
   .instrument__legend span { color: var(--muted); }
   .motion-btn { min-width: 3.2rem; border: 1px solid var(--ink); }
@@ -371,7 +445,15 @@
   @media (max-width: 53.99rem) {
     .primary-nav, .masthead__contact { display: none; }
     .menu-toggle { display: block; }
-    .mobile-drawer { display: block; border-top: 1px solid var(--rule); }
+    .mobile-drawer {
+      position: absolute;
+      inset: 100% 0 auto;
+      display: block;
+      max-height: calc(100dvh - 4.25rem);
+      overflow-y: auto;
+      background: var(--paper);
+      border-block: 1px solid var(--rule);
+    }
     .mobile-drawer .container { display: grid; padding-block: 0.45rem; }
     .mobile-drawer a + a { border-top: 1px solid var(--rule); }
   }
@@ -382,11 +464,21 @@
     .hero { gap: 1.3rem; padding-block: 2.05rem 2.75rem; }
     .hero__intro { margin-top: 0.95rem; }
     .hero__actions { margin-top: 1rem; column-gap: 0.8rem; font-size: 0.92rem; }
+    .workflow > div::before { inset-block-start: 1.85rem; }
     .contact__action { justify-self: start; }
   }
 }
 
 @layer accessibility {
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
   .skip-link {
     position: fixed;
     inset: 0.5rem auto auto 0.5rem;
@@ -400,7 +492,6 @@
   :where(a, button, summary, [tabindex]):focus-visible { outline: 2px solid var(--rust); outline-offset: 3px; }
   .contact :focus-visible { outline-color: var(--amber); }
   .plane-btn:focus-visible { outline-offset: -3px; outline-color: var(--rust); }
-  .plane-btn[aria-pressed="true"]:focus-visible { outline-color: var(--amber); }
 
   @media (forced-colors: active) {
     :where(a, button, summary, [tabindex]):focus-visible { outline-color: Highlight; }
