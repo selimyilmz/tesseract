@@ -45,7 +45,7 @@
       link.addEventListener("click", () => {
         closeMenu();
         const heading = document.querySelector(link.hash + " h2");
-        heading?.focus({ preventScroll: true });
+        requestAnimationFrame(() => heading?.focus({ preventScroll: true }));
       });
     });
     document.addEventListener("keydown", (e) => {
