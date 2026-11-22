@@ -7,7 +7,7 @@
  * contrast-pair: --muted / --paper-dark 4.5
  * contrast-pair: --ink / --workflow-paper 4.5
  * contrast-pair: --muted / --workflow-paper 4.5
- * contrast-pair: --moss / --workflow-paper 4.5
+ * contrast-pair: --workflow-accent / --workflow-paper 4.5
  * contrast-pair: --ink / --white 4.5
  * contrast-pair: --muted / --white 4.5
  * contrast-pair: --rust / --white 4.5
@@ -24,8 +24,9 @@
     --paper: #F3EFE6;
     --paper-dark: #E8E1D3;
     --white: #FAF8F3;
-    --workflow-paper: #E1E8DE;
-    --workflow-rule: #AAB7A7;
+    --workflow-paper: #E6D4BF;
+    --workflow-rule: #BBA18A;
+    --workflow-accent: #744626;
     --ink: #241C17;
     --muted: #5C4E43;
     --rust: #A33723;
@@ -232,7 +233,7 @@
 
   .workflow {
     position: relative;
-    border-top: 1px solid var(--moss);
+    border-top: 1px solid var(--workflow-accent);
   }
 
   .workflow::before {
@@ -261,13 +262,13 @@
     inset-inline-start: 0.015rem;
     width: 0.7rem;
     aspect-ratio: 1;
-    border: 1px solid var(--moss);
+    border: 1px solid var(--workflow-accent);
     background: var(--workflow-paper);
     transform: translateY(-50%) rotate(45deg);
   }
 
   .workflow > div:has(.stage--prototype)::before {
-    background: var(--moss);
+    background: var(--workflow-accent);
   }
 
   .workflow dt {
@@ -280,7 +281,7 @@
 
   .workflow dd { max-width: 55ch; color: var(--muted); }
   .stage { color: var(--muted); font: 400 0.78rem/1.5 var(--mono); }
-  .stage--prototype { color: var(--moss); }
+  .stage--prototype { color: var(--workflow-accent); }
 
   .status { background: var(--paper-dark); border-block: 1px solid var(--rule); }
 
