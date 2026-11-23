@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" referrerpolicy="no-referrer">
-  <link rel="stylesheet" href="styles.css?v=20261123a">
+  <link rel="stylesheet" href="styles.css?v=20261123b">
   <script src="tesseract-plate.js?v=20261123a" defer></script>
 </head>
 <body>
@@ -32,7 +32,7 @@
       <nav class="primary-nav" aria-label="Primary">
         <a href="#how-it-works">Product</a>
         <a href="#four-dimensions">Architecture</a>
-        <a href="#status">Prototype status</a>
+        <a href="#status">Capabilities</a>
         <a href="#business">First use case</a>
       </nav>
       <a class="masthead__contact" href="#contact">Walkthrough <span aria-hidden="true">↗</span></a>
@@ -42,7 +42,7 @@
       <div class="container">
         <a href="#how-it-works">Product</a>
         <a href="#four-dimensions">Architecture</a>
-        <a href="#status">Prototype status</a>
+        <a href="#status">Capabilities</a>
         <a href="#business">First use case</a>
         <a href="#contact">Request a walkthrough</a>
       </div>
@@ -98,6 +98,14 @@
       </figure>
     </section>
 
+    <nav class="cover-index container" aria-label="Tesseract axes">
+      <a class="cover-index__intro" href="#why-tesseract">Why Tesseract? <span aria-hidden="true">↓</span></a>
+      <a href="#axis-x" data-plane="x"><span>X</span> Filesystem</a>
+      <a href="#axis-y" data-plane="y"><span>Y</span> Execution</a>
+      <a href="#axis-z" data-plane="z"><span>Z</span> Network</a>
+      <a href="#axis-w" data-plane="w"><span>W</span> Evidence</a>
+    </nav>
+
     <section id="how-it-works" class="workflow-section section" aria-labelledby="workflow-title">
       <div class="container">
         <div class="section-heading">
@@ -131,20 +139,39 @@
       </div>
     </section>
 
+    <section id="why-tesseract" class="axis-section section" aria-labelledby="axis-title">
+      <div class="container">
+        <div class="section-heading">
+          <h2 id="axis-title" tabindex="-1">Why Tesseract?</h2>
+          <p>A tesseract is a four-dimensional cube. The opening diagram projects it onto the screen, and each axis represents a part of the system that handles or observes a controlled run.</p>
+        </div>
+        <dl class="axis-map">
+          <div id="axis-x" data-plane="x" tabindex="-1">
+            <dt><span class="axis-map__letter">X</span> Filesystem</dt>
+            <dd>The worker starts with a pinned, read-only Linux filesystem and designated inputs. A separate observer records supported file activity, such as access to the sample document.</dd>
+          </div>
+          <div id="axis-y" data-plane="y" tabindex="-1">
+            <dt><span class="axis-map__letter">Y</span> Execution</dt>
+            <dd>Linux namespaces isolate the worker. Seccomp limits which kernel calls it can make, and Linux control groups bound CPU, memory, and process count.</dd>
+          </div>
+          <div id="axis-z" data-plane="z" tabindex="-1">
+            <dt><span class="axis-map__letter">Z</span> Network</dt>
+            <dd>A test proxy captures supported HTTP and HTTPS requests. Simulated endpoints let a controlled run exercise network behavior with upstream forwarding disabled.</dd>
+          </div>
+          <div id="axis-w" data-plane="w" tabindex="-1">
+            <dt><span class="axis-map__letter">W</span> Evidence</dt>
+            <dd>A separate reader checks the hash-linked event log and reports what was observed, what policy was applied, and where coverage was incomplete.</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
     <section id="four-dimensions" class="architecture section" aria-labelledby="architecture-title">
       <div class="container architecture__grid">
         <div class="architecture__intro">
           <h2 id="architecture-title" tabindex="-1">Inside the test environment</h2>
           <p>Follow a document-processing workload through isolation, observation, and reporting.</p>
-          <details class="development-note">
-            <summary>Implementation layers</summary>
-            <dl class="architecture__notes">
-              <div><dt><span class="architecture__axis" data-plane="x">X</span> Filesystem</dt><dd>Read-only Wolfi filesystem and a separate file observer.</dd></div>
-              <div><dt><span class="architecture__axis" data-plane="y">Y</span> Process limits</dt><dd>Seccomp restrictions and Linux control groups.</dd></div>
-              <div><dt><span class="architecture__axis" data-plane="z">Z</span> Network</dt><dd>Local HTTP and HTTPS simulation with upstream forwarding disabled.</dd></div>
-              <div><dt><span class="architecture__axis" data-plane="w">W</span> Evidence</dt><dd>Hash-linked events checked by a separate reader.</dd></div>
-            </dl>
-          </details>
+          <a class="text-link architecture__link" href="#why-tesseract">Explore the four axes <span aria-hidden="true">↑</span></a>
         </div>
 
         <div id="runExplorer" class="run-explorer" data-step="launch" data-plane="y">
@@ -181,14 +208,34 @@
       </div>
     </section>
 
-    <section id="status" class="status" aria-labelledby="status-title">
-      <div class="container status__inner">
-        <h2 id="status-title" tabindex="-1">Prototype scope</h2>
-        <div>
-          <dl class="scope-matrix">
-            <div><dt>Exercised in prototype</dt><dd>Controlled Linux workloads and synthetic inputs. Coverage is scoped to the recorded run.</dd></div>
-            <div><dt>Gate for unknown packages</dt><dd>Broader validation and a disposable virtual machine worker.</dd></div>
-          </dl>
+    <section id="status" class="capabilities section" aria-labelledby="status-title">
+      <div class="container">
+        <div class="section-heading">
+          <h2 id="status-title" tabindex="-1">Capabilities and readiness</h2>
+          <p>Controlled Linux runs exercise the prototype with synthetic inputs. Wider validation takes place before unknown packages can run.</p>
+        </div>
+        <div class="capabilities__grid">
+          <div class="capabilities__group">
+            <h3>In the controlled prototype</h3>
+            <dl>
+              <div><dt>Package and policy checks</dt><dd>Validate package definitions and check content fingerprints against locks in supported scenarios.</dd></div>
+              <div><dt>Isolation and permissions</dt><dd>Run a workload as a separate worker with a read-only runtime image, explicit mounts, and resource limits.</dd></div>
+              <div><dt>Behavior observation</dt><dd>Record supported file access and network activity, with coverage tied to the scenario.</dd></div>
+              <div><dt>Simulated services and synthetic data</dt><dd>Exercise how workloads interact with controlled HTTP, HTTPS, mail, and cloud metadata fixtures.</dd></div>
+              <div><dt>Evidence checks</dt><dd>Verify the event chain and report observations, missing coverage, and cleanup status.</dd></div>
+            </dl>
+          </div>
+          <div class="capabilities__group">
+            <h3>Product roadmap</h3>
+            <dl>
+              <div><dt>Broader agent and component testing</dt><dd>Expand evaluation to full agents, tools, MCP servers, skills, and model artifacts. A disposable virtual machine worker is a gate for unknown packages.</dd></div>
+              <div><dt>Policy-controlled integrations</dt><dd>Apply explicit rules to approved external services and model requests.</dd></div>
+              <div><dt>Versioned approvals and updates</dt><dd>Bind signed approvals and test evidence to a release. A changed release returns for evaluation.</dd></div>
+              <div><dt>Package distribution</dt><dd>Share evaluated releases through catalogs with access controls and approval records.</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="capabilities__evidence">
           <details id="forensics" class="development-note">
             <summary>Early HTTPS development run</summary>
             <p>A controlled run completed with verified cleanup. The simulated endpoint saw two synthetic credential matches. One TLS handshake failed and the report recorded incomplete coverage.</p>
@@ -218,7 +265,7 @@
     <section id="contact" class="section contact" aria-labelledby="contact-title">
       <div class="container contact__inner">
         <div>
-          <h2 id="contact-title" tabindex="-1">See Tesseract in a live demo</h2>
+          <h2 id="contact-title" tabindex="-1">See Tesseract in action</h2>
           <p>Walk through controlled execution and discuss how an agent or tool would move from evaluation to approval.</p>
         </div>
         <div class="contact__action">
@@ -231,8 +278,12 @@
 
   <footer class="site-footer">
     <div class="container site-footer__inner">
-      <span>© 2026 Tesseract</span>
-      <a href="https://github.com/selimyilmz/tesseract">Site repository</a>
+      <span>Tesseract © 2026</span>
+      <nav class="site-footer__nav" aria-label="Footer">
+        <a href="#why-tesseract">The four axes</a>
+        <a href="#status">Capabilities</a>
+        <a href="https://github.com/selimyilmz/tesseract">Site repository</a>
+      </nav>
     </div>
   </footer>
 </body>
