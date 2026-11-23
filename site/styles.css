@@ -569,7 +569,7 @@
   .run-explorer__readout p[data-current] { visibility: visible; }
   .run-explorer__readout strong { color: var(--plane-accent); }
 
-  .instrument { position: relative; min-width: 0; background: var(--white); border: 1px solid var(--panel-edge); border-top: 2px solid var(--ink); }
+  .instrument { position: relative; min-width: 0; background: var(--white); border: 1px solid var(--rule); border-top: 2px solid var(--ink); }
 
   @media (min-width: 44rem) {
     .hero .instrument::before {
@@ -589,8 +589,8 @@
     gap: 0.25rem 0.75rem;
     align-items: baseline;
     background: var(--paper);
-    border-bottom: 1px solid var(--panel-divider);
-    padding: 0.65rem var(--panel-inset);
+    border-bottom: 1px solid var(--rule);
+    padding: 0.65rem 0.9rem;
     font-size: 0.9rem;
     font-weight: 600;
   }
@@ -625,8 +625,8 @@
     place-items: center;
     min-height: 13rem;
     background-image:
-      linear-gradient(to right, var(--panel-grid) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--panel-grid) 1px, transparent 1px);
+      linear-gradient(to right, var(--paper-dark) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--paper-dark) 1px, transparent 1px);
     background-position: center;
     background-size: 1.5rem 1.5rem;
   }
@@ -679,7 +679,7 @@
   .instrument__canvas-frame { width: min(100%, clamp(15rem, 28vw, 21rem)); aspect-ratio: 1; cursor: grab; touch-action: pan-y; }
   .instrument__canvas-frame:active { cursor: grabbing; }
   .instrument canvas { width: 100%; height: auto; }
-  .instrument__layers { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid var(--panel-divider); }
+  .instrument__layers { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid var(--rule); }
 
   .plane-btn, .motion-btn {
     min-height: 2.75rem;
@@ -692,7 +692,7 @@
   }
 
   .plane-btn { padding-inline: 0.25rem; overflow-wrap: anywhere; }
-  .plane-btn + .plane-btn { border-left: 1px solid var(--panel-divider); }
+  .plane-btn + .plane-btn { border-left: 1px solid var(--rule); }
   .plane-btn:hover, .motion-btn:hover { background: var(--paper-dark); }
   [data-plane="x"] { --plane-accent: var(--axis-x); }
   [data-plane="y"] { --plane-accent: var(--axis-y); }
@@ -708,8 +708,8 @@
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
     gap: 0.75rem;
-    padding: 0.75rem var(--panel-inset);
-    border-top: 1px solid var(--panel-divider);
+    padding: 0.75rem 0.9rem;
+    border-top: 1px solid var(--rule);
     font-size: 0.86rem;
   }
 
@@ -722,12 +722,18 @@
   .motion-btn { min-width: 3.2rem; border: 1px solid var(--ink); }
 
   @media (prefers-reduced-motion: no-preference) {
+    .brand img { transition: transform 180ms ease-out; }
+    .brand:focus-visible img { transform: rotate(-8deg) scale(1.06); }
     .plane-btn, .motion-btn, .run-explorer__steps button, .cover-index a, .button {
       transition: background-color 160ms ease, box-shadow 160ms ease;
     }
     .run-node { transition: border-color 160ms ease, background-color 160ms ease; }
     .run-wire { transition: color 160ms ease; }
     .instrument__axis::before { transition: background-color 160ms ease; }
+  }
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .brand:hover img { transform: rotate(-8deg) scale(1.06); }
   }
 
   .contact {
@@ -785,12 +791,21 @@
     .mobile-drawer a + a { border-top: 1px solid var(--rule); }
   }
 
+  @media (min-width: 44rem) and (max-width: 59.99rem) {
+    .hero { --hero-gap: clamp(1.6rem, 4.5vw, 2.7rem); }
+    .hero h1 { font-size: clamp(2.35rem, 4.2vw, 3rem); }
+    .instrument figcaption { gap: 0.25rem 0.5rem; padding-inline: 0.8rem; }
+    .instrument__caption { gap: 0.5rem; }
+  }
+
   @media (max-width: 43.99rem) {
     .hero, .workflow > div, .axis-map, .capabilities__grid,
     .use-case, .contact__inner { grid-template-columns: 1fr; }
-    .hero { gap: 1.3rem; padding-block: 2.05rem 1.25rem; }
-    .hero__intro { margin-top: 0.95rem; }
-    .hero__actions { margin-top: 1rem; column-gap: 0.8rem; font-size: 0.92rem; }
+    .hero { gap: 1.1rem; padding-block: 1.7rem 1.25rem; }
+    .hero h1 { font-size: clamp(1.95rem, 8.4vw, 2.65rem); line-height: 1.02; }
+    .hero__intro { margin-top: 0.8rem; }
+    .hero__actions { margin-top: 0.85rem; gap: 0.3rem 0.75rem; font-size: 0.88rem; }
+    .hero__actions .button { padding-inline: 0.78rem; }
     .workflow > div::before { inset-block-start: 1.85rem; }
     .cover-index { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .cover-index .cover-index__intro { grid-column: 1 / -1; }
