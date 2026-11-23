@@ -1,6 +1,6 @@
 # tesseract
 
-The **Tesseract** investor site explains how the prototype tests AI skills in an isolated Linux environment and reports observed behavior and gaps in evidence.
+The **Tesseract** investor site presents the trust workflow for AI agents and their components, alongside the controlled Linux execution prototype and its current validation scope.
 
 - **Live Site:** https://selimyilmz.github.io/tesseract/
 - **Walkthrough requests:** [Email the founder](mailto:selyilmaz26@ku.edu.tr?subject=Tesseract%20walkthrough).

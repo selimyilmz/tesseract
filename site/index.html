@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; base-uri 'none'; form-action 'none';">
-  <title>Tesseract — Behavior testing for AI skills</title>
-  <meta name="description" content="Tesseract is building a trust layer for AI skills, starting with an isolated Linux runtime that observes behavior and applies explicit permissions in controlled runs.">
+  <title>Tesseract — Behavior testing for AI agents and their tools</title>
+  <meta name="description" content="Tesseract is building a trust layer for AI agents and their components, starting with an isolated Linux runtime for controlled runs and explicit permissions.">
   <meta name="theme-color" content="#F3EFE6">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Tesseract">
-  <meta property="og:title" content="Tesseract — Behavior testing for AI skills">
-  <meta property="og:description" content="An isolated Linux runtime for observing AI skill behavior and applying explicit permissions in controlled runs.">
+  <meta property="og:title" content="Tesseract — Behavior testing for AI agents and their tools">
+  <meta property="og:description" content="Test, constrain, and review the software an AI agent runs. Explore Tesseract's controlled Linux prototype.">
   <meta property="og:url" content="https://selimyilmz.github.io/tesseract/">
   <meta property="og:image" content="https://selimyilmz.github.io/tesseract/assets/tesseract-logo-paper-1024.png">
   <meta name="twitter:card" content="summary">
@@ -18,8 +18,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" referrerpolicy="no-referrer">
-  <link rel="stylesheet" href="styles.css?v=20261122i">
-  <script src="tesseract-plate.js?v=20261122j" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20261123a">
+  <script src="tesseract-plate.js?v=20261123a" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -52,8 +52,8 @@
   <main id="main-content" tabindex="-1">
     <section class="hero container" aria-labelledby="hero-title">
       <div class="hero__copy">
-        <h1 id="hero-title"><span>See what an AI skill does</span> <em>before you approve it.</em></h1>
-        <p class="hero__intro">Tesseract is building a trust layer for AI skills. It starts with an isolated Linux runtime that observes behavior and applies explicit permissions in controlled runs.</p>
+        <h1 id="hero-title"><span>See what AI agents do.</span> <em>Before you grant access.</em></h1>
+        <p class="hero__intro">Tesseract is building a trust layer for agents, their tools, and the packages they rely on. The Linux prototype observes controlled workloads and applies explicit permissions.</p>
         <div class="hero__actions">
           <a class="button button--ink" href="#how-it-works">Explore how it works <span aria-hidden="true">↓</span></a>
           <a class="text-link" href="#contact">Request a walkthrough</a>
@@ -102,20 +102,26 @@
       <div class="container">
         <div class="section-heading">
           <h2 id="workflow-title" tabindex="-1">From testing to approval</h2>
-          <p>The report helps a reviewer decide whether and under which permissions a skill should enter an approved catalog.</p>
+          <p>Evaluate behavior, apply permissions, and make a versioned approval decision.</p>
+        </div>
+        <div class="target-scope">
+          <span>Target scope</span>
+          <ul aria-label="Target component types">
+            <li>Agents</li><li>Skills</li><li>Tool integrations</li><li>MCP servers</li><li>Model artifacts</li>
+          </ul>
         </div>
         <dl class="workflow">
           <div>
             <dt>Before installation <span class="stage stage--prototype">In prototype</span></dt>
-            <dd>Run a controlled workload with test data. Record file activity and supported network traffic, including gaps in coverage.</dd>
+            <dd>Observe file and network activity on controlled inputs. Record gaps in coverage.</dd>
           </div>
           <div>
             <dt>During execution <span class="stage stage--prototype">In prototype</span></dt>
-            <dd>Apply the test environment's Linux isolation, resource limits, and network restrictions while the workload runs.</dd>
+            <dd>Enforce Linux isolation, resource limits, and network restrictions while the workload runs.</dd>
           </div>
           <div>
             <dt>When sharing <span class="stage">Planned</span></dt>
-            <dd>Share a specific package version with its approved permissions and test evidence attached.</dd>
+            <dd>Attach approved permissions and evidence to a specific version of an agent or component.</dd>
           </div>
           <div>
             <dt>After an update <span class="stage">Planned</span></dt>
@@ -129,26 +135,49 @@
       <div class="container architecture__grid">
         <div class="architecture__intro">
           <h2 id="architecture-title" tabindex="-1">Inside the test environment</h2>
-          <p>Each part has a different job, from limiting what the workload can reach to recording what the observers saw.</p>
+          <p>Follow a document-processing workload through isolation, observation, and reporting.</p>
+          <details class="development-note">
+            <summary>Implementation layers</summary>
+            <dl class="architecture__notes">
+              <div><dt><span class="architecture__axis" data-plane="x">X</span> Filesystem</dt><dd>Read-only Wolfi filesystem and a separate file observer.</dd></div>
+              <div><dt><span class="architecture__axis" data-plane="y">Y</span> Process limits</dt><dd>Seccomp restrictions and Linux control groups.</dd></div>
+              <div><dt><span class="architecture__axis" data-plane="z">Z</span> Network</dt><dd>Local HTTP and HTTPS simulation with upstream forwarding disabled.</dd></div>
+              <div><dt><span class="architecture__axis" data-plane="w">W</span> Evidence</dt><dd>Hash-linked events checked by a separate reader.</dd></div>
+            </dl>
+          </details>
         </div>
-        <dl class="architecture__notes">
-          <div>
-            <dt><span class="architecture__axis" data-plane="x" aria-label="X axis">X</span> Filesystem</dt>
-            <dd>A pinned, read-only Wolfi filesystem gives the workload its own view of files. The file sensor runs outside the worker's user identity.</dd>
+
+        <div id="runExplorer" class="run-explorer" data-step="launch" data-plane="y">
+          <div class="run-explorer__header">
+            <h3>Inside an agent run</h3>
+            <span>Illustrative flow</span>
           </div>
-          <div>
-            <dt><span class="architecture__axis" data-plane="y" aria-label="Y axis">Y</span> Process limits</dt>
-            <dd>Seccomp restricts kernel calls. Linux control groups limit CPU, memory, and the number of tasks.</dd>
+          <div class="run-explorer__steps" role="group" aria-label="Inspect an execution step" hidden>
+            <button type="button" data-step-choice="launch" data-plane="y" aria-pressed="true">Launch</button>
+            <button type="button" data-step-choice="files" data-plane="x" aria-pressed="false">File access</button>
+            <button type="button" data-step-choice="network" data-plane="z" aria-pressed="false">Network</button>
+            <button type="button" data-step-choice="report" data-plane="w" aria-pressed="false">Report</button>
           </div>
-          <div>
-            <dt><span class="architecture__axis" data-plane="z" aria-label="Z axis">Z</span> Network</dt>
-            <dd>The test proxy captures supported HTTP and HTTPS requests in a simulated service with no upstream forwarding.</dd>
+          <figure class="run-diagram" aria-label="A sample PDF enters an isolated Linux worker. File and network activity are observed outside the worker. A separate reader checks the resulting evidence.">
+            <div class="run-node run-node--input"><span>Test input</span><strong>Sample PDF</strong></div>
+            <div class="run-node run-node--files"><span>Filesystem</span><strong>File observer</strong></div>
+            <div class="run-node run-node--worker"><span>Isolated worker</span><strong>Document task</strong></div>
+            <div class="run-node run-node--proxy"><span>Network</span><strong>Test proxy</strong></div>
+            <div class="run-node run-node--reader"><span>Separate reader</span><strong>Behavior report</strong></div>
+            <span class="run-wire run-wire--input" aria-hidden="true"></span>
+            <span class="run-wire run-wire--files" aria-hidden="true"></span>
+            <span class="run-wire run-wire--proxy" aria-hidden="true"></span>
+            <span class="run-wire run-wire--collect" aria-hidden="true"></span>
+            <span class="run-wire run-wire--report" aria-hidden="true"></span>
+          </figure>
+          <div class="run-explorer__readout">
+            <p data-step-note="launch" data-current><strong>Y · Launch</strong> The worker starts with a sample document, an explicit policy, and resource limits.</p>
+            <p data-step-note="files"><strong>X · File access</strong> A separate observer records supported file activity, such as a read of the sample document.</p>
+            <p data-step-note="network"><strong>Z · Network</strong> Supported requests reach a simulated endpoint. The test proxy keeps upstream forwarding disabled.</p>
+            <p data-step-note="report"><strong>W · Report</strong> A separate reader checks the event log and flags gaps in observation.</p>
           </div>
-          <div>
-            <dt><span class="architecture__axis" data-plane="w" aria-label="W axis">W</span> Evidence</dt>
-            <dd>A separate reader checks the hash-linked event log and reports gaps in observation.</dd>
-          </div>
-        </dl>
+          <p class="visually-hidden" role="status"></p>
+        </div>
       </div>
     </section>
 
@@ -156,7 +185,10 @@
       <div class="container status__inner">
         <h2 id="status-title" tabindex="-1">Prototype scope</h2>
         <div>
-          <p>Validation is in progress with controlled workloads and synthetic data. Broader testing and a disposable virtual machine worker are needed before running unknown third-party packages.</p>
+          <dl class="scope-matrix">
+            <div><dt>Exercised in prototype</dt><dd>Controlled Linux workloads and synthetic inputs. Coverage is scoped to the recorded run.</dd></div>
+            <div><dt>Gate for unknown packages</dt><dd>Broader validation and a disposable virtual machine worker.</dd></div>
+          </dl>
           <details id="forensics" class="development-note">
             <summary>Early HTTPS development run</summary>
             <p>A controlled run completed with verified cleanup. The simulated endpoint saw two synthetic credential matches. One TLS handshake failed and the report recorded incomplete coverage.</p>
@@ -169,11 +201,15 @@
     <section id="business" class="container section" aria-labelledby="business-title">
       <div class="use-case">
         <div>
-          <h2 id="business-title" tabindex="-1">A review gate for an internal skill catalog</h2>
-          <p class="use-case__lead">The first use case is a platform security team deciding which skills employees can install.</p>
+          <h2 id="business-title" tabindex="-1">A review gate for an internal agent catalog</h2>
+          <p class="use-case__lead">A planned workflow for platform security teams approving agents, tools, and extensions.</p>
         </div>
         <div class="use-case__detail">
-          <p>A team proposes a new skill. A reviewer inspects the behavior report, checks the requested permissions, and approves a specific version for the catalog. The same review is triggered when that version changes.</p>
+          <ol class="catalog-flow" aria-label="Planned catalog approval steps">
+            <li><strong>Submit a version</strong><span>Agent or component</span></li>
+            <li><strong>Review evidence</strong><span>Behavior and permissions</span></li>
+            <li><strong>Approve for use</strong><span>Updates go back to review</span></li>
+          </ol>
           <p><strong>Commercial direction.</strong> A free local testing tool for developers, with a planned paid self-hosted approval workflow for organizations.</p>
         </div>
       </div>
@@ -183,7 +219,7 @@
       <div class="container contact__inner">
         <div>
           <h2 id="contact-title" tabindex="-1">See Tesseract in a live demo</h2>
-          <p>Walk through the prototype and discuss how a skill would move from evaluation to approval.</p>
+          <p>Walk through controlled execution and discuss how an agent or tool would move from evaluation to approval.</p>
         </div>
         <div class="contact__action">
           <a class="button button--paper" href="mailto:selyilmaz26@ku.edu.tr?subject=Tesseract%20walkthrough">Request a walkthrough <span aria-hidden="true">↗</span></a>
