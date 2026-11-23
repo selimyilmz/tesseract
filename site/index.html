@@ -12,14 +12,19 @@
   <meta property="og:title" content="Tesseract — Behavior testing for AI agents and their tools">
   <meta property="og:description" content="Test, constrain, and review the software an AI agent runs. Explore Tesseract's controlled Linux prototype.">
   <meta property="og:url" content="https://selimyilmz.github.io/tesseract/">
-  <meta property="og:image" content="https://selimyilmz.github.io/tesseract/assets/tesseract-logo-paper-1024.png">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:image" content="https://selimyilmz.github.io/tesseract/assets/tesseract-share.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Tesseract, with a wireframe hypercube and the headline See what AI agents do. Before you grant access.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://selimyilmz.github.io/tesseract/assets/tesseract-share.png">
+  <meta name="twitter:image:alt" content="Tesseract, with a wireframe hypercube and the headline See what AI agents do. Before you grant access.">
   <link rel="icon" href="assets/tesseract-logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" referrerpolicy="no-referrer">
-  <link rel="stylesheet" href="styles.css?v=20261123d">
-  <script src="tesseract-plate.js?v=20261123a" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20261123e">
+  <script src="tesseract-plate.js?v=20261123e" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -50,61 +55,63 @@
   </header>
 
   <main id="main-content" tabindex="-1">
-    <section class="hero container" aria-labelledby="hero-title">
-      <div class="hero__copy">
-        <h1 id="hero-title"><span>See what AI agents do.</span> <em>Before you grant access.</em></h1>
-        <p class="hero__intro">Tesseract is building a trust layer for agents, their tools, and the packages they rely on. The Linux prototype observes controlled workloads and applies explicit permissions.</p>
-        <div class="hero__actions">
-          <a class="button button--ink" href="#how-it-works">Explore how it works <span aria-hidden="true">↓</span></a>
-          <a class="text-link" href="#contact">Request a walkthrough</a>
+    <div class="cover">
+      <section class="hero container" aria-labelledby="hero-title">
+        <div class="hero__copy">
+          <h1 id="hero-title"><span>See what AI agents do.</span> <em>Before you grant access.</em></h1>
+          <p class="hero__intro">Tesseract is building a trust layer for agents, tools, and packages. Its Linux prototype observes controlled runs and applies explicit permissions.</p>
+          <div class="hero__actions">
+            <a class="button button--ink" href="#how-it-works">Explore how it works <span aria-hidden="true">↓</span></a>
+            <a class="text-link" href="#contact">Request a walkthrough</a>
+          </div>
         </div>
-      </div>
 
-      <figure class="instrument">
-        <figcaption>
-          <span>The Tesseract</span>
-          <span class="instrument__caption">
-            <span>4D projection</span>
-            <span id="planeIndicator" class="instrument__axis" data-plane="all" hidden>All axes</span>
-          </span>
-        </figcaption>
-        <div class="instrument__stage">
-          <span class="instrument__scale" aria-hidden="true"></span>
-          <img src="assets/tesseract-logo.svg" alt="Tesseract emblem" width="224" height="224" class="instrument__fallback">
-          <div id="tesseractFrame" class="instrument__canvas-frame" tabindex="0" aria-label="4D projection. Drag or use the arrow keys to rotate." hidden>
-            <canvas id="tesseractCanvas" role="img" aria-label="Hypercube projection illustrating four parts of the test environment."></canvas>
-          </div>
-        </div>
-        <div id="instrumentControls" class="instrument__controls" hidden>
-          <div class="instrument__layers" role="group" aria-label="Highlight a part of the test environment">
-            <button type="button" class="plane-btn" data-plane="all" aria-pressed="true">All</button>
-            <button type="button" class="plane-btn" data-plane="x" aria-pressed="false">Files</button>
-            <button type="button" class="plane-btn" data-plane="y" aria-pressed="false">Calls</button>
-            <button type="button" class="plane-btn" data-plane="z" aria-pressed="false">Network</button>
-            <button type="button" class="plane-btn" data-plane="w" aria-pressed="false">Log</button>
-          </div>
-          <div class="instrument__legend">
-            <div class="instrument__readout">
-              <p data-readout="all" data-current><strong>Test environment</strong> <span>Select a part to highlight it. Drag or use the arrow keys to rotate.</span></p>
-              <p data-readout="x"><strong>Filesystem</strong> <span>A read-only Wolfi filesystem and a separate file sensor.</span></p>
-              <p data-readout="y"><strong>Kernel calls</strong> <span>Seccomp restricts which kernel calls the workload can make.</span></p>
-              <p data-readout="z"><strong>Network</strong> <span>The test proxy captures supported requests without forwarding them upstream.</span></p>
-              <p data-readout="w"><strong>Evidence log</strong> <span>A separate reader checks the event chain and reports gaps in observation.</span></p>
+        <figure class="instrument">
+          <figcaption>
+            <span>Tesseract · 4D</span>
+            <span class="instrument__caption">
+              <span id="planeIndicator" class="instrument__axis" data-plane="all" hidden>All axes</span>
+              <a class="instrument__trace" href="#four-dimensions">View run</a>
+            </span>
+          </figcaption>
+          <div class="instrument__stage">
+            <span class="instrument__scale" aria-hidden="true"></span>
+            <img src="assets/tesseract-logo.svg" alt="Tesseract emblem" width="224" height="224" class="instrument__fallback">
+            <div id="tesseractFrame" class="instrument__canvas-frame" tabindex="0" aria-label="4D projection. Drag or use the arrow keys to rotate." hidden>
+              <canvas id="tesseractCanvas" role="img" aria-label="Hypercube projection illustrating four parts of the test environment."></canvas>
             </div>
-            <p class="visually-hidden" id="planeAnnouncement" role="status"></p>
-            <button type="button" id="motionToggle" class="motion-btn">Play</button>
           </div>
-        </div>
-      </figure>
-    </section>
+          <div id="instrumentControls" class="instrument__controls" hidden>
+            <div class="instrument__layers" role="group" aria-label="Highlight a part of the test environment">
+              <button type="button" class="plane-btn" data-plane="all" aria-pressed="true">All</button>
+              <button type="button" class="plane-btn" data-plane="x" aria-pressed="false">Files</button>
+              <button type="button" class="plane-btn" data-plane="y" aria-pressed="false">Calls</button>
+              <button type="button" class="plane-btn" data-plane="z" aria-pressed="false">Network</button>
+              <button type="button" class="plane-btn" data-plane="w" aria-pressed="false">Log</button>
+            </div>
+            <div class="instrument__legend">
+              <div class="instrument__readout">
+                <p data-readout="all" data-current><strong>Test environment</strong> <span>Select a part to highlight it. Drag or use the arrow keys to rotate.</span></p>
+                <p data-readout="x"><strong>Filesystem</strong> <span>A read-only Wolfi filesystem and a separate file sensor.</span></p>
+                <p data-readout="y"><strong>Kernel calls</strong> <span>Seccomp restricts which kernel calls the workload can make.</span></p>
+                <p data-readout="z"><strong>Network</strong> <span>The test proxy captures supported requests without forwarding them upstream.</span></p>
+                <p data-readout="w"><strong>Evidence log</strong> <span>A separate reader checks the event chain and reports gaps in observation.</span></p>
+              </div>
+              <p class="visually-hidden" id="planeAnnouncement" role="status"></p>
+              <button type="button" id="motionToggle" class="motion-btn">Play</button>
+            </div>
+          </div>
+        </figure>
+      </section>
 
-    <nav class="cover-index container" aria-label="Tesseract axes">
-      <a class="cover-index__intro" href="#why-tesseract">Why Tesseract? <span aria-hidden="true">↓</span></a>
-      <a href="#axis-x" data-plane="x"><span>X</span> Filesystem</a>
-      <a href="#axis-y" data-plane="y"><span>Y</span> Execution</a>
-      <a href="#axis-z" data-plane="z"><span>Z</span> Network</a>
-      <a href="#axis-w" data-plane="w"><span>W</span> Evidence</a>
-    </nav>
+      <nav class="cover-index container" aria-label="Tesseract axes">
+        <a class="cover-index__intro" href="#why-tesseract">Why Tesseract? <span aria-hidden="true">↓</span></a>
+        <a href="#axis-x" data-plane="x"><span>X</span> Filesystem</a>
+        <a href="#axis-y" data-plane="y"><span>Y</span> Execution</a>
+        <a href="#axis-z" data-plane="z"><span>Z</span> Network</a>
+        <a href="#axis-w" data-plane="w"><span>W</span> Evidence</a>
+      </nav>
+    </div>
 
     <section id="how-it-works" class="workflow-section section" aria-labelledby="workflow-title">
       <div class="container">

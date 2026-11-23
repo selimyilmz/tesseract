@@ -530,20 +530,29 @@
   const notes = explorer.querySelectorAll("[data-step-note]");
   const announcement = explorer.querySelector("[role='status']");
 
+  function selectStep(button) {
+    const step = button.dataset.stepChoice;
+    explorer.dataset.step = step;
+    explorer.dataset.plane = button.dataset.plane;
+    buttons.forEach((choice) => {
+      choice.setAttribute("aria-pressed", String(choice === button));
+    });
+    notes.forEach((note) => {
+      const selected = note.dataset.stepNote === step;
+      note.toggleAttribute("data-current", selected);
+      if (selected) announcement.textContent = note.textContent.trim();
+    });
+  }
+
   steps.hidden = false;
   buttons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const step = button.dataset.stepChoice;
-      explorer.dataset.step = step;
-      explorer.dataset.plane = button.dataset.plane;
-      buttons.forEach((choice) => {
-        choice.setAttribute("aria-pressed", String(choice === button));
-      });
-      notes.forEach((note) => {
-        const selected = note.dataset.stepNote === step;
-        note.toggleAttribute("data-current", selected);
-        if (selected) announcement.textContent = note.textContent.trim();
-      });
-    });
+    button.addEventListener("click", () => selectStep(button));
+  });
+
+  const traceLink = document.querySelector(".instrument__trace");
+  traceLink?.addEventListener("click", () => {
+    const plane = document.querySelector(".plane-btn[aria-pressed='true']")?.dataset.plane;
+    const matchingStep = Array.from(buttons).find((button) => button.dataset.plane === plane);
+    if (matchingStep) selectStep(matchingStep);
   });
 })();
