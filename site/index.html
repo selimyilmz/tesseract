@@ -23,7 +23,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" referrerpolicy="no-referrer">
-  <link rel="stylesheet" href="styles.css?v=20261123f">
+  <link rel="stylesheet" href="styles.css?v=20261128a">
   <script src="tesseract-plate.js?v=20261123e" defer></script>
 </head>
 <body>
@@ -38,6 +38,7 @@
         <a href="#how-it-works">Product</a>
         <a href="#four-dimensions">Architecture</a>
         <a href="#status">Capabilities</a>
+        <a href="#evidence">Measurements</a>
         <a href="#business">First use case</a>
       </nav>
       <a class="masthead__contact" href="#contact">Walkthrough <span aria-hidden="true">↗</span></a>
@@ -48,6 +49,7 @@
         <a href="#how-it-works">Product</a>
         <a href="#four-dimensions">Architecture</a>
         <a href="#status">Capabilities</a>
+        <a href="#evidence">Measurements</a>
         <a href="#business">First use case</a>
         <a href="#contact">Request a walkthrough</a>
       </div>
@@ -135,12 +137,12 @@
             <dd>Enforce Linux isolation, resource limits, and network restrictions while the workload runs.</dd>
           </div>
           <div>
-            <dt>When sharing <span class="stage">Planned</span></dt>
-            <dd>Attach approved permissions and evidence to a specific version of an agent or component.</dd>
+            <dt>When sharing <span class="stage stage--experiment">Early experiment</span></dt>
+            <dd>Attach approved permissions and evidence to a specific version of an agent or component. Reports for owned test packages already carry the version fingerprint.</dd>
           </div>
           <div>
-            <dt>After an update <span class="stage">Planned</span></dt>
-            <dd>Require a new test and approval when the package changes.</dd>
+            <dt>After an update <span class="stage stage--experiment">Early experiment</span></dt>
+            <dd>Require a new test and approval when the package changes. Tested with an unsigned local review record.</dd>
           </div>
         </dl>
       </div>
@@ -242,12 +244,117 @@
             </dl>
           </div>
         </div>
-        <div class="capabilities__evidence">
-          <details id="forensics" class="development-note">
-            <summary>Early HTTPS development run</summary>
-            <p>A controlled run completed with verified cleanup. The simulated endpoint saw two synthetic credential matches. One TLS handshake failed and the report recorded incomplete coverage.</p>
-            <p class="development-note__source"><time datetime="2026-11-18">18 Nov 2026</time> · N4 run <code>d0eb0ce4</code></p>
-          </details>
+      </div>
+    </section>
+
+    <section id="evidence" class="evidence section" aria-labelledby="evidence-title">
+      <div class="container">
+        <div class="section-heading">
+          <h2 id="evidence-title" tabindex="-1">What we measured</h2>
+          <p>Owned synthetic test packages with known behavior. Expected results were frozen before any scan, and no package was tuned against another tool. Measured on a development computer on 27&ndash;28 November 2026.</p>
+        </div>
+
+        <p class="evidence__suite">Across 12 suite cases, three skills each in a normal, active, dormant and approved variant, Tesseract matched the expected output and behavior in all 12, with verified cleanup.</p>
+
+        <div class="findings">
+          <article class="finding" aria-labelledby="finding-side-effect">
+            <div class="finding__claim">
+              <h3 id="finding-side-effect">Same correct output, one extra side effect</h3>
+              <p>Two versions of a text-audit skill returned identical, correct results. One of them also opened a planted SSH key decoy.</p>
+              <p class="finding__limit">The second scanner&rsquo;s vendor recommends a model-assisted mode for production. We did not test that mode. The decoy key was synthetic, and the record shows that the file was opened, not that it was read.</p>
+            </div>
+            <div class="table-frame" tabindex="0" role="region" aria-labelledby="finding-side-effect">
+              <table class="evidence-table">
+                <thead><tr><th scope="col">Tool</th><th scope="col">Clean version</th><th scope="col">Version that opens the decoy</th></tr></thead>
+                <tbody>
+                  <tr class="is-ours"><th scope="row">Tesseract runtime report</th><td>Correct output, no findings</td><td>Same output, one decoy-access finding from an external file sensor</td></tr>
+                  <tr><th scope="row">Static skill scanner 1, local mode</th><td>Safe</td><td>Caution, decoy line flagged in the source</td></tr>
+                  <tr><th scope="row">Static skill scanner 2, two local modes</th><td>Safe</td><td>Safe</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="finding" aria-labelledby="finding-evidence">
+            <div class="finding__claim">
+              <h3 id="finding-evidence">Same enforcement, different evidence</h3>
+              <p>A document-inventory skill wrote a receipt under an allowed policy and a denied one, on Tesseract and on an open-source process sandbox.</p>
+              <p class="finding__limit">One file operation on one sandbox release. Broader filesystem and network policies were outside this comparison.</p>
+            </div>
+            <div class="table-frame" tabindex="0" role="region" aria-labelledby="finding-evidence">
+              <table class="evidence-table">
+                <thead><tr><th scope="col">Check</th><th scope="col">Tesseract</th><th scope="col">Process sandbox</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">Denied write</th><td>Blocked, no receipt</td><td>Blocked, no receipt</td></tr>
+                  <tr><th scope="row">Allowed write</th><td>19-byte receipt</td><td>The same 19-byte receipt</td></tr>
+                  <tr class="is-ours"><th scope="row">Package version in the record</th><td>Version and fingerprint</td><td>Not in the tested interface</td></tr>
+                  <tr class="is-ours"><th scope="row">Applied permission and receipt digest</th><td>In the report</td><td>Violation list empty; digest measured by our script</td></tr>
+                  <tr class="is-ours"><th scope="row">Package with an old fingerprint</th><td>Refused before launch</td><td>No equivalent check in the tested interface</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="finding" aria-labelledby="finding-version">
+            <div class="finding__claim">
+              <h3 id="finding-version">A new version does not inherit approval</h3>
+              <p>Version 1.0.1 added one sentence to the skill&rsquo;s documentation. Its output and receipt matched version 1.0.0 exactly. Its package fingerprint did not.</p>
+              <p class="finding__limit">The review record is an unsigned local experiment. The protected runner does not require it yet.</p>
+            </div>
+            <div class="table-frame" tabindex="0" role="region" aria-labelledby="finding-version">
+              <table class="evidence-table">
+                <thead><tr><th scope="col">What we tried</th><th scope="col">Result</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">Reuse the 1.0.0 review for 1.0.1</th><td>New test required</td></tr>
+                  <tr><th scope="row">Attach the 1.0.0 report to 1.0.1</th><td>Rejected</td></tr>
+                  <tr><th scope="row">Run 1.0.1 under the old fingerprint</th><td>Refused before launch</td></tr>
+                  <tr><th scope="row">Fresh protected run of 1.0.1</th><td>Separate decision recorded</td></tr>
+                  <tr><th scope="row">Change one field of a valid review, 11 variants</th><td>11 of 11 rejected</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+
+        <div class="coverage">
+          <div class="coverage__intro">
+            <h3 id="coverage-title">Coverage by stage</h3>
+            <p>Tools are grouped by category. A filled mark is our own measurement. An open mark is documented by vendors and not verified by us.</p>
+          </div>
+          <div class="table-frame" tabindex="0" role="region" aria-labelledby="coverage-title">
+            <table class="coverage-table">
+              <thead>
+                <tr><th scope="col">Category</th><th scope="col">Before installation</th><th scope="col">During execution</th><th scope="col">When sharing</th><th scope="col">After an update</th></tr>
+              </thead>
+              <tbody>
+                <tr class="is-ours"><th scope="row">Tesseract</th><td><span class="mark mark--measured" aria-hidden="true"></span><span class="visually-hidden">Measured</span></td><td><span class="mark mark--measured" aria-hidden="true"></span><span class="visually-hidden">Measured</span></td><td><span class="mark mark--measured" aria-hidden="true"></span><span class="visually-hidden">Measured</span></td><td><span class="mark mark--partial" aria-hidden="true"></span><span class="visually-hidden">Partly measured</span></td></tr>
+                <tr><th scope="row">Local static skill scanners</th><td><span class="mark mark--measured" aria-hidden="true"></span><span class="visually-hidden">Measured</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td></tr>
+                <tr><th scope="row">Process-level sandbox</th><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--measured" aria-hidden="true"></span><span class="visually-hidden">Measured</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td></tr>
+                <tr><th scope="row">Agent sandbox and runtime platforms</th><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--documented" aria-hidden="true"></span><span class="visually-hidden">Documented</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td></tr>
+                <tr><th scope="row">Enterprise agent security platforms</th><td><span class="mark mark--documented" aria-hidden="true"></span><span class="visually-hidden">Documented</span></td><td><span class="mark mark--documented" aria-hidden="true"></span><span class="visually-hidden">Documented</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td></tr>
+                <tr><th scope="row">Skill evaluation and registry services</th><td><span class="mark mark--documented" aria-hidden="true"></span><span class="visually-hidden">Documented</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--documented" aria-hidden="true"></span><span class="visually-hidden">Documented</span></td><td><span class="mark mark--documented" aria-hidden="true"></span><span class="visually-hidden">Documented</span></td></tr>
+                <tr><th scope="row">Signed build provenance</th><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--documented" aria-hidden="true"></span><span class="visually-hidden">Documented</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <ul class="coverage__legend" aria-hidden="true">
+            <li><span class="mark mark--measured"></span>Measured by us</li>
+            <li><span class="mark mark--partial"></span>Partly measured</li>
+            <li><span class="mark mark--documented"></span>Documented by vendors</li>
+            <li><span class="mark mark--none"></span>Not found in the documentation we reviewed</li>
+          </ul>
+          <p class="coverage__note">Some vendors document several stages across separate products. We have not tested those products together. Signed build provenance identifies an artifact; it does not describe runtime behavior.</p>
+        </div>
+
+        <div class="not-measured">
+          <h3>Not measured yet</h3>
+          <ul>
+            <li>Model-assisted scanner modes</li>
+            <li>Virtual-machine agent runtimes and registry scanners</li>
+            <li>MCP servers and full agent packages</li>
+            <li>A live model choosing skills inside the protected runner</li>
+            <li>Signed approvals that the runner enforces</li>
+          </ul>
         </div>
       </div>
     </section>
@@ -292,6 +399,7 @@
       <nav class="site-footer__nav" aria-label="Footer">
         <a href="#why-tesseract">The four axes</a>
         <a href="#status">Capabilities</a>
+        <a href="#evidence">Measurements</a>
       </nav>
     </div>
   </footer>
