@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; base-uri 'none'; form-action 'none';">
+  <title>Evidence — Tesseract</title>
+  <meta name="description" content="What Tesseract measured on 27 and 28 November 2026, with the limits of each comparison.">
+  <meta name="theme-color" content="#F3EFE6">
+  <link rel="icon" href="assets/tesseract-logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="styles.css?v=20261128b">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="masthead">
+    <div class="container masthead__inner">
+      <a class="brand" href="index.html">
+        <img src="assets/tesseract-logo.svg" alt="" width="32" height="32">
+        <span>tesseract</span>
+      </a>
+      <a class="masthead__back" href="index.html#evidence">Back to the overview</a>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+    <section class="evidence evidence--page section" aria-labelledby="page-title">
+      <div class="container">
+        <div class="section-heading">
+          <h1 id="page-title" class="page-title">What we measured</h1>
+          <p>Each comparison below used the same owned test package, inputs and task on every tool. The limits of each result are stated next to it.</p>
+        </div>
+
+        <dl class="method">
+          <div><dt>Packages</dt><dd>Owned synthetic skills with known behavior: normal, active, dormant and approved variants.</dd></div>
+          <div><dt>Frozen in advance</dt><dd>Expected results and input bytes, recorded with SHA-256 before any scan.</dd></div>
+          <div><dt>Other tools</dt><dd>Local configurations only, grouped by category. No package was tuned against any tool.</dd></div>
+          <div><dt>Where</dt><dd>A development computer, 27 and 28 November 2026. Tesseract ran in its protected Linux runner.</dd></div>
+        </dl>
+
+        <p class="evidence__suite">Across 12 suite cases, Tesseract matched the expected output and behavior in all 12, with verified cleanup.</p>
+
+        <div class="findings findings--page">
+          <article class="finding" aria-labelledby="finding-side-effect">
+            <div class="finding__claim">
+              <h3 id="finding-side-effect">Same correct output, one extra side effect</h3>
+              <p>Two versions of a text-audit skill returned identical, correct results. One of them also opened a planted SSH key decoy.</p>
+              <p class="finding__limit">The second scanner&rsquo;s vendor recommends a model-assisted mode for production. We did not test that mode. The decoy key was synthetic, and the record shows that the file was opened, not that it was read.</p>
+            </div>
+            <div class="table-frame" tabindex="0" role="region" aria-labelledby="finding-side-effect">
+              <table class="evidence-table">
+                <thead><tr><th scope="col">Tool</th><th scope="col">Clean version</th><th scope="col">Version that opens the decoy</th></tr></thead>
+                <tbody>
+                  <tr class="is-ours"><th scope="row">Tesseract runtime report</th><td>Correct output, no findings</td><td>Same output, one decoy-access finding from an external file sensor</td></tr>
+                  <tr><th scope="row">Static skill scanner 1, local mode</th><td>Safe</td><td>Caution, decoy line flagged in the source</td></tr>
+                  <tr><th scope="row">Static skill scanner 2, two local modes</th><td>Safe</td><td>Safe</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        <div class="report-pair">
+          <figure class="report">
+            <figcaption><strong>Clean version</strong> <span>Job <code>22026085</code></span></figcaption>
+            <pre aria-label="Report fields for the clean version"><code>package.name: &quot;text-audit-a&quot;
+status: &quot;SUCCESS&quot;
+observed.stdout: &quot;{\&quot;lines\&quot;: 5, \&quot;repeated\&quot;: [[3, 5]], \&quot;unfinished\&quot;: [4], \&quot;words\&quot;: 11}\n&quot;
+findings: []
+observed.sensor.lure: []
+cleanup_status: &quot;VERIFIED&quot;</code></pre>
+          </figure>
+          <figure class="report">
+            <figcaption><strong>Version that opens the decoy</strong> <span>Job <code>d5a34d43</code></span></figcaption>
+            <pre aria-label="Report fields for the version that opens the decoy"><code>package.name: &quot;text-audit-b&quot;
+status: &quot;SUCCESS&quot;
+observed.stdout: &quot;{\&quot;lines\&quot;: 5, \&quot;repeated\&quot;: [[3, 5]], \&quot;unfinished\&quot;: [4], \&quot;words\&quot;: 11}\n&quot;
+<mark>findings: [{&quot;channel&quot;: &quot;lure_access&quot;, &quot;encoding&quot;: &quot;sensor&quot;, &quot;kind&quot;: &quot;ssh_key_body&quot;, &quot;location&quot;: &quot;.ssh/id_ed25519&quot;}]</mark>
+<mark>observed.sensor.lure: [{&quot;meaning&quot;: [&quot;lure opened&quot;, &quot;opened; this event does not verify a content read&quot;], &quot;operations&quot;: [&quot;open&quot;], &quot;path&quot;: &quot;.ssh/id_ed25519&quot;, &quot;roles&quot;: [&quot;cage&quot;], &quot;seen_paths&quot;: [&quot;?/id_ed25519&quot;]}]</mark>
+cleanup_status: &quot;VERIFIED&quot;</code></pre>
+          </figure>
+          <p class="report-pair__note">Selected fields from the two runtime reports, shown by their path in the report. Values are unedited. Lines that differ are highlighted. The task output is identical.</p>
+        </div>
+
+          <article class="finding" aria-labelledby="finding-evidence">
+            <div class="finding__claim">
+              <h3 id="finding-evidence">Same enforcement, different evidence</h3>
+              <p>A document-inventory skill wrote a receipt under an allowed policy and a denied one, on Tesseract and on an open-source process sandbox.</p>
+              <p class="finding__limit">One file operation on one sandbox release. Broader filesystem and network policies were outside this comparison.</p>
+            </div>
+            <div class="table-frame" tabindex="0" role="region" aria-labelledby="finding-evidence">
+              <table class="evidence-table">
+                <thead><tr><th scope="col">Check</th><th scope="col">Tesseract</th><th scope="col">Process sandbox</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">Denied write</th><td>Blocked, no receipt</td><td>Blocked, no receipt</td></tr>
+                  <tr><th scope="row">Allowed write</th><td>19-byte receipt</td><td>The same 19-byte receipt</td></tr>
+                  <tr class="is-ours"><th scope="row">Package version in the record</th><td>Version and fingerprint</td><td>Not in the tested interface</td></tr>
+                  <tr class="is-ours"><th scope="row">Applied permission and receipt digest</th><td>In the report</td><td>Violation list empty; digest measured by our script</td></tr>
+                  <tr class="is-ours"><th scope="row">Package with an old fingerprint</th><td>Refused before launch</td><td>No equivalent check in the tested interface</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="finding" aria-labelledby="finding-version">
+            <div class="finding__claim">
+              <h3 id="finding-version">A new version does not inherit approval</h3>
+              <p>Version 1.0.1 added one sentence to the skill&rsquo;s documentation. Its output and receipt matched version 1.0.0 exactly. Its package fingerprint did not.</p>
+              <p class="finding__limit">The review record is an unsigned local experiment. The protected runner does not require it yet.</p>
+            </div>
+            <div class="table-frame" tabindex="0" role="region" aria-labelledby="finding-version">
+              <table class="evidence-table">
+                <thead><tr><th scope="col">What we tried</th><th scope="col">Result</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">Reuse the 1.0.0 review for 1.0.1</th><td>New test required</td></tr>
+                  <tr><th scope="row">Attach the 1.0.0 report to 1.0.1</th><td>Rejected</td></tr>
+                  <tr><th scope="row">Run 1.0.1 under the old fingerprint</th><td>Refused before launch</td></tr>
+                  <tr><th scope="row">Fresh protected run of 1.0.1</th><td>Separate decision recorded</td></tr>
+                  <tr><th scope="row">Change one field of a valid review, 11 variants</th><td>11 of 11 rejected</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        <div class="report-pair">
+          <figure class="report">
+            <figcaption><strong>Version 1.0.0</strong> <span>Review summary</span></figcaption>
+            <pre aria-label="Identity fields for version 1.0.0"><code>package.version: &quot;1.0.0&quot;
+<mark>package.sha256: &quot;3ed2515cacb1c0dc264905cdcdd05c536b5927bfcc4eec2c656254bcac1eeb22&quot;</mark>
+job: &quot;68d7aafcb48d40a19fb2fa9fba536506&quot;
+receipt_sha256: &quot;0c84aa2ae2da37af38043e287d98bd3af73fc1b5cb455cda623dbdda55d97e53&quot;</code></pre>
+          </figure>
+          <figure class="report">
+            <figcaption><strong>Version 1.0.1</strong> <span>Review summary</span></figcaption>
+            <pre aria-label="Identity fields for version 1.0.1"><code>package.version: &quot;1.0.1&quot;
+<mark>package.sha256: &quot;176e85cc1ab50324aba2f663365d245c81edccfd0a6137040a3b06856046735a&quot;</mark>
+job: &quot;2b8799c97d824b4dba44babf2ccdc80b&quot;
+receipt_sha256: &quot;0c84aa2ae2da37af38043e287d98bd3af73fc1b5cb455cda623dbdda55d97e53&quot;</code></pre>
+          </figure>
+          <p class="report-pair__note">The same receipt, a different package fingerprint. The review is bound to the fingerprint, so it does not carry over.</p>
+        </div>
+        </div>
+
+        <div class="coverage">
+          <div class="coverage__intro">
+            <h3 id="coverage-title">Coverage by stage</h3>
+            <p>Tools are grouped by category. A filled mark is our own measurement. An open mark is documented by vendors and not verified by us.</p>
+          </div>
+          <div class="table-frame" tabindex="0" role="region" aria-labelledby="coverage-title">
+            <table class="coverage-table">
+              <thead>
+                <tr><th scope="col">Category</th><th scope="col">Before installation</th><th scope="col">During execution</th><th scope="col">When sharing</th><th scope="col">After an update</th></tr>
+              </thead>
+              <tbody>
+                <tr class="is-ours"><th scope="row">Tesseract</th><td><span class="mark mark--measured" aria-hidden="true"></span><span class="visually-hidden">Measured</span></td><td><span class="mark mark--measured" aria-hidden="true"></span><span class="visually-hidden">Measured</span></td><td><span class="mark mark--measured" aria-hidden="true"></span><span class="visually-hidden">Measured</span></td><td><span class="mark mark--partial" aria-hidden="true"></span><span class="visually-hidden">Partly measured</span></td></tr>
+                <tr><th scope="row">Local static skill scanners</th><td><span class="mark mark--measured" aria-hidden="true"></span><span class="visually-hidden">Measured</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td></tr>
+                <tr><th scope="row">Process-level sandbox</th><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--measured" aria-hidden="true"></span><span class="visually-hidden">Measured</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td></tr>
+                <tr><th scope="row">Agent sandbox and runtime platforms</th><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--documented" aria-hidden="true"></span><span class="visually-hidden">Documented</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td></tr>
+                <tr><th scope="row">Enterprise agent security platforms</th><td><span class="mark mark--documented" aria-hidden="true"></span><span class="visually-hidden">Documented</span></td><td><span class="mark mark--documented" aria-hidden="true"></span><span class="visually-hidden">Documented</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td></tr>
+                <tr><th scope="row">Skill evaluation and registry services</th><td><span class="mark mark--documented" aria-hidden="true"></span><span class="visually-hidden">Documented</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--documented" aria-hidden="true"></span><span class="visually-hidden">Documented</span></td><td><span class="mark mark--documented" aria-hidden="true"></span><span class="visually-hidden">Documented</span></td></tr>
+                <tr><th scope="row">Signed build provenance</th><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--documented" aria-hidden="true"></span><span class="visually-hidden">Documented</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <ul class="coverage__legend" aria-hidden="true">
+            <li><span class="mark mark--measured"></span>Measured by us</li>
+            <li><span class="mark mark--partial"></span>Partly measured</li>
+            <li><span class="mark mark--documented"></span>Documented by vendors</li>
+            <li><span class="mark mark--none"></span>Not found in the documentation we reviewed</li>
+          </ul>
+          <p class="coverage__note">Some vendors document several stages across separate products. We have not tested those products together. Signed build provenance identifies an artifact; it does not describe runtime behavior.</p>
+        </div>
+
+        <div class="not-measured">
+          <h3>Not measured yet</h3>
+          <ul>
+            <li>Model-assisted scanner modes</li>
+            <li>Virtual-machine agent runtimes and registry scanners</li>
+            <li>MCP servers and full agent packages</li>
+            <li>A live model choosing skills inside the protected runner</li>
+            <li>Signed approvals that the runner enforces</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <div>
+        <p>Tesseract © 2026</p>
+        <p>Dost Seferoğlu and Selim Işık Yılmaz</p>
+      </div>
+      <nav class="site-footer__nav" aria-label="Footer">
+        <a href="index.html#why-tesseract">The four axes</a>
+        <a href="index.html#status">Capabilities</a>
+        <a href="index.html#evidence">Measurements</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

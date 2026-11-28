@@ -23,7 +23,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" referrerpolicy="no-referrer">
-  <link rel="stylesheet" href="styles.css?v=20261128a">
+  <link rel="stylesheet" href="styles.css?v=20261128b">
   <script src="tesseract-plate.js?v=20261123e" defer></script>
 </head>
 <body>
@@ -41,7 +41,7 @@
         <a href="#evidence">Measurements</a>
         <a href="#business">First use case</a>
       </nav>
-      <a class="masthead__contact" href="#contact">Walkthrough <span aria-hidden="true">↗</span></a>
+      <a class="masthead__contact" href="#contact">Walkthrough</a>
       <button type="button" id="menuToggle" class="menu-toggle" aria-expanded="false" aria-controls="mobileDrawer">Menu</button>
     </div>
     <nav id="mobileDrawer" class="mobile-drawer" aria-label="Mobile" hidden>
@@ -60,7 +60,7 @@
     <div class="cover">
       <section class="hero container" aria-labelledby="hero-title">
         <div class="hero__copy">
-          <h1 id="hero-title"><span>See what AI agents do.</span> <em>Before you grant access.</em></h1>
+          <h1 id="hero-title"><span>See what AI agents do.</span> <span>Before you grant access.</span></h1>
           <p class="hero__intro">Tesseract is building a trust layer for agents, tools, and packages. Its Linux prototype observes controlled runs and applies explicit permissions.</p>
           <div class="hero__actions">
             <a class="button button--ink" href="#how-it-works">Explore product</a>
@@ -70,7 +70,7 @@
 
         <figure class="instrument">
           <figcaption>
-            <span>Tesseract · 4D</span>
+            <span>Tesseract 4D</span>
             <span class="instrument__caption">
               <span id="planeIndicator" class="instrument__axis" data-plane="all" hidden>All axes</span>
               <a class="instrument__trace" href="#four-dimensions">View run</a>
@@ -107,7 +107,7 @@
       </section>
 
       <nav class="cover-index container" aria-label="Tesseract axes">
-        <a class="cover-index__intro" href="#why-tesseract">Why Tesseract? <span aria-hidden="true">↓</span></a>
+        <a class="cover-index__intro" href="#why-tesseract">Why Tesseract?</a>
         <a href="#axis-x" data-plane="x"><span>X</span> Filesystem</a>
         <a href="#axis-y" data-plane="y"><span>Y</span> Execution</a>
         <a href="#axis-z" data-plane="z"><span>Z</span> Network</a>
@@ -152,7 +152,7 @@
       <div class="container">
         <div class="section-heading">
           <h2 id="axis-title" tabindex="-1">Why Tesseract?</h2>
-          <p>A tesseract is a four-dimensional cube. The opening diagram projects it onto the screen, and each axis represents a part of the system that handles or observes a controlled run.</p>
+          <p>A tesseract is a four-dimensional cube. The opening diagram projects it onto the screen. Its four axes are the four parts of the test environment, not the four stages above.</p>
         </div>
         <dl class="axis-map">
           <div id="axis-x" data-plane="x" tabindex="-1">
@@ -180,7 +180,7 @@
         <div class="architecture__intro">
           <h2 id="architecture-title" tabindex="-1">Inside the test environment</h2>
           <p>Follow a document-processing workload through isolation, observation, and reporting.</p>
-          <a class="text-link architecture__link" href="#why-tesseract">Explore the four axes <span aria-hidden="true">↑</span></a>
+          <a class="text-link architecture__link" href="#why-tesseract">Explore the four axes</a>
         </div>
 
         <div id="runExplorer" class="run-explorer" data-step="launch" data-plane="y">
@@ -207,10 +207,10 @@
             <span class="run-wire run-wire--report" aria-hidden="true"></span>
           </figure>
           <div class="run-explorer__readout">
-            <p data-step-note="launch" data-current><strong>Y · Launch</strong> The worker starts with a sample document, an explicit policy, and resource limits.</p>
-            <p data-step-note="files"><strong>X · File access</strong> A separate observer records supported file activity, such as a read of the sample document.</p>
-            <p data-step-note="network"><strong>Z · Network</strong> Supported requests reach a simulated endpoint. The test proxy keeps upstream forwarding disabled.</p>
-            <p data-step-note="report"><strong>W · Report</strong> A separate reader checks the event log and flags gaps in observation.</p>
+            <p data-step-note="launch" data-current><strong>Launch</strong> The worker starts with a sample document, an explicit policy, and resource limits.</p>
+            <p data-step-note="files"><strong>File access</strong> A separate observer records supported file activity, such as a read of the sample document.</p>
+            <p data-step-note="network"><strong>Network</strong> Supported requests reach a simulated endpoint. The test proxy keeps upstream forwarding disabled.</p>
+            <p data-step-note="report"><strong>Report</strong> A separate reader checks the event log and flags gaps in observation.</p>
           </div>
           <p class="visually-hidden" role="status"></p>
         </div>
@@ -251,111 +251,23 @@
       <div class="container">
         <div class="section-heading">
           <h2 id="evidence-title" tabindex="-1">What we measured</h2>
-          <p>Owned synthetic test packages with known behavior. Expected results were frozen before any scan, and no package was tuned against another tool. Measured on a development computer on 27&ndash;28 November 2026.</p>
+          <p>Owned test packages with known behavior, compared on 27 and 28 November 2026. Other tools are grouped by category.</p>
         </div>
-
-        <p class="evidence__suite">Across 12 suite cases, three skills each in a normal, active, dormant and approved variant, Tesseract matched the expected output and behavior in all 12, with verified cleanup.</p>
-
-        <div class="findings">
-          <article class="finding" aria-labelledby="finding-side-effect">
-            <div class="finding__claim">
-              <h3 id="finding-side-effect">Same correct output, one extra side effect</h3>
-              <p>Two versions of a text-audit skill returned identical, correct results. One of them also opened a planted SSH key decoy.</p>
-              <p class="finding__limit">The second scanner&rsquo;s vendor recommends a model-assisted mode for production. We did not test that mode. The decoy key was synthetic, and the record shows that the file was opened, not that it was read.</p>
-            </div>
-            <div class="table-frame" tabindex="0" role="region" aria-labelledby="finding-side-effect">
-              <table class="evidence-table">
-                <thead><tr><th scope="col">Tool</th><th scope="col">Clean version</th><th scope="col">Version that opens the decoy</th></tr></thead>
-                <tbody>
-                  <tr class="is-ours"><th scope="row">Tesseract runtime report</th><td>Correct output, no findings</td><td>Same output, one decoy-access finding from an external file sensor</td></tr>
-                  <tr><th scope="row">Static skill scanner 1, local mode</th><td>Safe</td><td>Caution, decoy line flagged in the source</td></tr>
-                  <tr><th scope="row">Static skill scanner 2, two local modes</th><td>Safe</td><td>Safe</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </article>
-
-          <article class="finding" aria-labelledby="finding-evidence">
-            <div class="finding__claim">
-              <h3 id="finding-evidence">Same enforcement, different evidence</h3>
-              <p>A document-inventory skill wrote a receipt under an allowed policy and a denied one, on Tesseract and on an open-source process sandbox.</p>
-              <p class="finding__limit">One file operation on one sandbox release. Broader filesystem and network policies were outside this comparison.</p>
-            </div>
-            <div class="table-frame" tabindex="0" role="region" aria-labelledby="finding-evidence">
-              <table class="evidence-table">
-                <thead><tr><th scope="col">Check</th><th scope="col">Tesseract</th><th scope="col">Process sandbox</th></tr></thead>
-                <tbody>
-                  <tr><th scope="row">Denied write</th><td>Blocked, no receipt</td><td>Blocked, no receipt</td></tr>
-                  <tr><th scope="row">Allowed write</th><td>19-byte receipt</td><td>The same 19-byte receipt</td></tr>
-                  <tr class="is-ours"><th scope="row">Package version in the record</th><td>Version and fingerprint</td><td>Not in the tested interface</td></tr>
-                  <tr class="is-ours"><th scope="row">Applied permission and receipt digest</th><td>In the report</td><td>Violation list empty; digest measured by our script</td></tr>
-                  <tr class="is-ours"><th scope="row">Package with an old fingerprint</th><td>Refused before launch</td><td>No equivalent check in the tested interface</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </article>
-
-          <article class="finding" aria-labelledby="finding-version">
-            <div class="finding__claim">
-              <h3 id="finding-version">A new version does not inherit approval</h3>
-              <p>Version 1.0.1 added one sentence to the skill&rsquo;s documentation. Its output and receipt matched version 1.0.0 exactly. Its package fingerprint did not.</p>
-              <p class="finding__limit">The review record is an unsigned local experiment. The protected runner does not require it yet.</p>
-            </div>
-            <div class="table-frame" tabindex="0" role="region" aria-labelledby="finding-version">
-              <table class="evidence-table">
-                <thead><tr><th scope="col">What we tried</th><th scope="col">Result</th></tr></thead>
-                <tbody>
-                  <tr><th scope="row">Reuse the 1.0.0 review for 1.0.1</th><td>New test required</td></tr>
-                  <tr><th scope="row">Attach the 1.0.0 report to 1.0.1</th><td>Rejected</td></tr>
-                  <tr><th scope="row">Run 1.0.1 under the old fingerprint</th><td>Refused before launch</td></tr>
-                  <tr><th scope="row">Fresh protected run of 1.0.1</th><td>Separate decision recorded</td></tr>
-                  <tr><th scope="row">Change one field of a valid review, 11 variants</th><td>11 of 11 rejected</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </article>
+        <div class="evidence-brief">
+          <dl class="evidence-brief__claims">
+            <div><dt>Same output, one extra side effect</dt><dd>A skill returned the correct result and also opened a planted SSH key decoy. The runtime report recorded the access.</dd></div>
+            <div><dt>Same enforcement, different evidence</dt><dd>A process sandbox blocked the same write. Only Tesseract&rsquo;s record named the package version and fingerprint.</dd></div>
+            <div><dt>No inherited approval</dt><dd>One added sentence changed the package fingerprint. The earlier review no longer applied.</dd></div>
+          </dl>
+          <figure class="report report--brief">
+            <figcaption><strong>From the runtime report</strong> <span>Values unedited</span></figcaption>
+            <pre aria-label="Fields from the runtime report of the skill that opened the decoy"><code>status: &quot;SUCCESS&quot;
+observed.stdout: &quot;{\&quot;lines\&quot;: 5, \&quot;repeated\&quot;: [[3, 5]], \&quot;unfinished\&quot;: [4], \&quot;words\&quot;: 11}\n&quot;
+<mark>findings: [{&quot;channel&quot;: &quot;lure_access&quot;, &quot;encoding&quot;: &quot;sensor&quot;, &quot;kind&quot;: &quot;ssh_key_body&quot;, &quot;location&quot;: &quot;.ssh/id_ed25519&quot;}]</mark>
+cleanup_status: &quot;VERIFIED&quot;</code></pre>
+          </figure>
         </div>
-
-        <div class="coverage">
-          <div class="coverage__intro">
-            <h3 id="coverage-title">Coverage by stage</h3>
-            <p>Tools are grouped by category. A filled mark is our own measurement. An open mark is documented by vendors and not verified by us.</p>
-          </div>
-          <div class="table-frame" tabindex="0" role="region" aria-labelledby="coverage-title">
-            <table class="coverage-table">
-              <thead>
-                <tr><th scope="col">Category</th><th scope="col">Before installation</th><th scope="col">During execution</th><th scope="col">When sharing</th><th scope="col">After an update</th></tr>
-              </thead>
-              <tbody>
-                <tr class="is-ours"><th scope="row">Tesseract</th><td><span class="mark mark--measured" aria-hidden="true"></span><span class="visually-hidden">Measured</span></td><td><span class="mark mark--measured" aria-hidden="true"></span><span class="visually-hidden">Measured</span></td><td><span class="mark mark--measured" aria-hidden="true"></span><span class="visually-hidden">Measured</span></td><td><span class="mark mark--partial" aria-hidden="true"></span><span class="visually-hidden">Partly measured</span></td></tr>
-                <tr><th scope="row">Local static skill scanners</th><td><span class="mark mark--measured" aria-hidden="true"></span><span class="visually-hidden">Measured</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td></tr>
-                <tr><th scope="row">Process-level sandbox</th><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--measured" aria-hidden="true"></span><span class="visually-hidden">Measured</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td></tr>
-                <tr><th scope="row">Agent sandbox and runtime platforms</th><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--documented" aria-hidden="true"></span><span class="visually-hidden">Documented</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td></tr>
-                <tr><th scope="row">Enterprise agent security platforms</th><td><span class="mark mark--documented" aria-hidden="true"></span><span class="visually-hidden">Documented</span></td><td><span class="mark mark--documented" aria-hidden="true"></span><span class="visually-hidden">Documented</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td></tr>
-                <tr><th scope="row">Skill evaluation and registry services</th><td><span class="mark mark--documented" aria-hidden="true"></span><span class="visually-hidden">Documented</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--documented" aria-hidden="true"></span><span class="visually-hidden">Documented</span></td><td><span class="mark mark--documented" aria-hidden="true"></span><span class="visually-hidden">Documented</span></td></tr>
-                <tr><th scope="row">Signed build provenance</th><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td><td><span class="mark mark--documented" aria-hidden="true"></span><span class="visually-hidden">Documented</span></td><td><span class="mark mark--none" aria-hidden="true"></span><span class="visually-hidden">Not found</span></td></tr>
-              </tbody>
-            </table>
-          </div>
-          <ul class="coverage__legend" aria-hidden="true">
-            <li><span class="mark mark--measured"></span>Measured by us</li>
-            <li><span class="mark mark--partial"></span>Partly measured</li>
-            <li><span class="mark mark--documented"></span>Documented by vendors</li>
-            <li><span class="mark mark--none"></span>Not found in the documentation we reviewed</li>
-          </ul>
-          <p class="coverage__note">Some vendors document several stages across separate products. We have not tested those products together. Signed build provenance identifies an artifact; it does not describe runtime behavior.</p>
-        </div>
-
-        <div class="not-measured">
-          <h3>Not measured yet</h3>
-          <ul>
-            <li>Model-assisted scanner modes</li>
-            <li>Virtual-machine agent runtimes and registry scanners</li>
-            <li>MCP servers and full agent packages</li>
-            <li>A live model choosing skills inside the protected runner</li>
-            <li>Signed approvals that the runner enforces</li>
-          </ul>
-        </div>
+        <a class="button button--ink evidence__more" href="evidence.html">Read the evidence</a>
       </div>
     </section>
 
@@ -383,7 +295,7 @@
           <p>Walk through controlled execution and discuss how an agent or tool would move from evaluation to approval.</p>
         </div>
         <div class="contact__action">
-          <a class="button button--paper" href="mailto:selyilmaz26@ku.edu.tr?subject=Tesseract%20walkthrough">Request a walkthrough <span aria-hidden="true">↗</span></a>
+          <a class="button button--paper" href="mailto:selyilmaz26@ku.edu.tr?subject=Tesseract%20walkthrough">Request a walkthrough</a>
           <p><a href="mailto:selyilmaz26@ku.edu.tr">selyilmaz26@ku.edu.tr</a></p>
         </div>
       </div>
@@ -394,7 +306,7 @@
     <div class="container site-footer__inner">
       <div>
         <p>Tesseract © 2026</p>
-        <p>Dost Seferoğlu · Selim Işık Yılmaz</p>
+        <p>Dost Seferoğlu and Selim Işık Yılmaz</p>
       </div>
       <nav class="site-footer__nav" aria-label="Footer">
         <a href="#why-tesseract">The four axes</a>
